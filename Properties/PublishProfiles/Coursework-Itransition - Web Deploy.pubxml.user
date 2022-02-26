@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Этот файл используется процессом публикации или упаковки вашего веб-проекта. Можно настроить поведение этого процесса,
+изменив этот файл MSBuild. Подробности см. на странице https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAzCqoIHZ43U+yULw8N2nu7QAAAAACAAAAAAAQZgAAAAEAACAAAACAmuGBdikFQiiOTExP8Lrj8BE61mMtGKHG9oJohh0bbQAAAAAOgAAAAAIAACAAAAA0RdRK78sBFZjwXnLa25S7B6ouZ9bemUSeLSrkgm+sDYAAAABV1F/WQVKSwtzhb+7fYmPZx+1eFaYDg4ptHa0oF9cg9cNxnr6Vn9MPqM2g1iU1bPGO2Zi7BOC/t/AuQOHg6oq+XHlawSw0ltUdOjlya+RMNvXLpmY+N23X7X8XU4tla7jBsDVnrs2rZaPapW3biYTOuS0AfxvT5s/TBv8k1fHwA0AAAACivDfASG+UfK0L5ro77OjbMVL0UzwmqsrsjV5YoQ5JoEaKe13x41jepFSbUULgPVN8mLZY3b22WjdMszS/ySKP</EncryptedPassword>
+    <History>True|2022-02-25T21:45:52.1925460Z;</History>
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DefaultConnection">
+      <Value>Server=tcp:courseworkdbserver.database.windows.net,1433%3bInitial Catalog=Coursework_db%3bPersist Security Info=False%3bUser ID=Magitrop%3bPassword=12qw12qW%3bMultipleActiveResultSets=False%3bEncrypt=True%3bTrustServerCertificate=False%3bConnection Timeout=30%3b</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+  <ItemGroup>
+    <EFMigrations Include="RazorCoursework.Data.AppContentDbContext">
+      <Value>Server=tcp:courseworkdbserver.database.windows.net,1433%3bInitial Catalog=Coursework_db%3bPersist Security Info=False%3bUser ID=Magitrop%3bPassword=12qw12qW%3bMultipleActiveResultSets=False%3bEncrypt=True%3bTrustServerCertificate=False%3bConnection Timeout=30%3b</Value>
+    </EFMigrations>
+    <EFMigrations Include="RazorCoursework.Data.ApplicationDbContext">
+      <Value>Server=tcp:courseworkdbserver.database.windows.net,1433%3bInitial Catalog=Coursework_db%3bPersist Security Info=False%3bUser ID=Magitrop%3bPassword=12qw12qW%3bMultipleActiveResultSets=False%3bEncrypt=True%3bTrustServerCertificate=False%3bConnection Timeout=30%3b</Value>
+    </EFMigrations>
+  </ItemGroup>
+</Project>
