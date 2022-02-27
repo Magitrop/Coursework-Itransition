@@ -40,8 +40,8 @@ namespace RazorCoursework.Migrations
                 columns: table => new
                 {
                     RelationID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ReviewID = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    TagID = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    ReviewID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TagID = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,7 +57,7 @@ namespace RazorCoursework.Migrations
                         column: x => x.TagID,
                         principalTable: "Tags",
                         principalColumn: "TagID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

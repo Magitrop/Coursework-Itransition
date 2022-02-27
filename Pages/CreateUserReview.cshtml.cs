@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Coursework_Itransition.Data;
+using RazorCoursework.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -50,6 +50,7 @@ namespace RazorCoursework.Pages
                         ReviewText = Input.ReviewText,
                         ReviewSubjectGenre = Input.ReviewSubjectGenre,
                         ReviewSubjectName = Input.ReviewSubjectName,
+                        CreationDate = DateTime.Now,
                         TagRelations = new List<UserReviewAndTagRelation>()
                     };
                     context.Reviews.Add(newReview);
@@ -58,7 +59,9 @@ namespace RazorCoursework.Pages
                                         where t.Length > 0
                                         select t)
                     {
-                        Tag newTag = context.Tags.Include(t => t.ReviewRelations).FirstOrDefault(_t => _t.TagName == tag);
+                        Tag newTag = context.Tags
+                            .Include(t => t.ReviewRelations)
+                            .FirstOrDefault(_t => _t.TagName == tag);
                         if (newTag == null)
                         {
                             newTag = new Tag()

@@ -1,0 +1,35 @@
+﻿<div class="text-center">
+    @if (Model.currentPage - 1 > 0)
+    {
+        <a class="btn btn-light btn-outline-dark"
+           asp-page="SearchReviews"
+           asp-route-tag="@Model.currentTag"
+           asp-route-p="@(Model.currentPage - 1)">
+            <span class="d-inline-block">@(Model.currentPage - 1)</span>
+        </a>
+    }
+    else
+    {
+        <div class="btn">
+            <span class="d-inline-block"></span>
+        </div>
+    }
+    <div class="btn">
+        <span class="d-inline-block">@Model.currentPage</span>
+    </div>
+    @if (Model.currentPage < Model.pagesCount)
+    {
+        <a class="btn btn-light btn-outline-dark"
+           asp-page="SearchReviews"
+           asp-route-tag="@Model.currentTag"
+           asp-route-p="@(Model.currentPage + 1)">
+            <span class="d-inline-block">@(Model.currentPage + 1)</span>
+        </a>
+    }
+    else
+    {
+        <div class="btn">
+            <span class="d-inline-block"></span>
+        </div>
+    }
+</div>

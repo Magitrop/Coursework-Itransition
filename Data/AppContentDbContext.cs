@@ -1,4 +1,4 @@
-﻿using Coursework_Itransition.Data;
+﻿using RazorCoursework.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,11 +12,12 @@ namespace RazorCoursework.Data
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<UserReviewAndTagRelation> ReviewAndTagRelations { get; set; }
+        public DbSet<Rating> ReviewRatings { get; set; }
+        public DbSet<Like> ReviewLikes { get; set; }
 
         public AppContentDbContext(DbContextOptions<AppContentDbContext> options)
             : base(options)
         {
-            Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -25,6 +26,18 @@ namespace RazorCoursework.Data
                 .HasMany(p => p.TagRelations)
                 .WithOne(b => b.Review)
                 .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasForeignKey(prop => prop.ReviewID);
+
+            modelBuilder.Entity<Rating>()
+                .HasOne(p => p.Review)
+                .WithMany(b => b.Ratings)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasForeignKey(prop => prop.ReviewID);
+
+            modelBuilder.Entity<Like>()
+                .HasOne(p => p.Review)
+                .WithMany(b => b.Likes)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasForeignKey(prop => prop.ReviewID);
 
