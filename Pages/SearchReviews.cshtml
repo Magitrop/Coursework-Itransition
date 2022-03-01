@@ -3,32 +3,14 @@
 @{
 }
 
-<partial name="_ReviewsPagingPartial" />
-<hr />
-<div class="row justify-content-center">
-    @foreach (var r in Model.reviews)
-    {
-        <div class="col-xl-5 col-lg-5 col-md-5 col-10 border border-dark text-center" style="margin: 10px">
-            <h4 style="margin-top: 30px; margin-bottom: 30px">@r.ReviewSubjectName</h4>
-            <h5 class="text-muted">@r.ReviewSubjectGenre</h5>
-            <small class="text-muted">@r.CreationDate</small>
-            <hr />
-            <p>@r.ReviewText</p>
-            <hr />
-            <p>Теги:</p>
-            <div style="margin-bottom: 30px" class="d-block">
-                @foreach (var t in r.TagRelations)
-                {
-                    <a class="btn btn-light btn-outline-dark"
-                       asp-page="SearchReviews"
-                       asp-route-tag="@t.Tag.TagName"
-                       asp-route-p="1">
-                        <span class="d-inline-block">@t.Tag.TagName</span>
-                    </a>
-                }
-            </div>
-        </div>
-    }
-</div>
-<hr />
-<partial name="_ReviewsPagingPartial" />
+@if (Model.pagesCount > 1)
+{
+    <partial name="_SearchReviewsPagingPartial" />
+    <hr />
+}
+<partial name="_ShowReviewsPartial" />
+@if (Model.pagesCount > 1)
+{
+    <hr />
+    <partial name="_SearchReviewsPagingPartial" />
+}

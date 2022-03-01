@@ -11,6 +11,7 @@ namespace RazorCoursework.Data
     {
         [Key] [DatabaseGenerated(DatabaseGeneratedOption.Identity)] public string ReviewID { get; set; }
         public string ReviewCreatorID { get; set; }
+        public string ReviewCreatorName { get; set; }
         public string AttachedPictureLinks { get; set; }
         public string ReviewSubjectName { get; set; }
         public string ReviewSubjectGenre { get; set; }

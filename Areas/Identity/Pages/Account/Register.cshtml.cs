@@ -46,19 +46,23 @@ namespace RazorCoursework.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
+            [Display(Name = "Логин")]
+            public string Name { get; set; }
+
+            [Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 1)]
+            [StringLength(100, ErrorMessage = "{0} должен быть от {2} до {1} символов в длину.", MinimumLength = 1)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "Пароль")]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "Повторите пароль")]
+            [Compare("Password", ErrorMessage = "Пароли не совпадают.")]
             public string ConfirmPassword { get; set; }
         }
 
@@ -74,18 +78,25 @@ namespace RazorCoursework.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
-                var result = await _userManager.CreateAsync(user, Input.Password);
-                if (result.Succeeded)
+                if (!_userManager.Users.Any(u => u.UserName == Input.Name))
                 {
-                    _logger.LogInformation("User created a new account with password.");
+                    var user = new IdentityUser { UserName = Input.Name, Email = Input.Email };
+                    var result = await _userManager.CreateAsync(user, Input.Password);
+                    if (result.Succeeded)
+                    {
+                        _logger.LogInformation("User created a new account with password.");
 
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return LocalRedirect(returnUrl);
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect(returnUrl);
+                    }
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
                 }
-                foreach (var error in result.Errors)
+                else
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    ModelState.AddModelError(string.Empty, "Пользователь с таким логином уже зарегистрирован.");
                 }
             }
 

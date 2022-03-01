@@ -445,5 +445,7 @@ C:\Users\xiaom\Desktop\Max\Itransition\RazorCoursework\obj\Debug\net5.0\Razor\Ar
 C:\Users\xiaom\Desktop\Max\Itransition\RazorCoursework\obj\Debug\net5.0\Razor\Areas\Identity\Pages\_ViewImports.cshtml.g.cs
 C:\Users\xiaom\Desktop\Max\Itransition\RazorCoursework\obj\Debug\net5.0\Razor\Pages\Home.cshtml.g.cs
 C:\Users\xiaom\Desktop\Max\Itransition\RazorCoursework\obj\Debug\net5.0\Razor\Pages\SearchReviews.cshtml.g.cs
-C:\Users\xiaom\Desktop\Max\Itransition\RazorCoursework\obj\Debug\net5.0\Razor\Pages\AllReviews.cshtml.g.cs
-C:\Users\xiaom\Desktop\Max\Itransition\RazorCoursework\obj\Debug\net5.0\Razor\Pages\Shared\_ReviewsPagingPartial.cshtml.g.cs
+C:\Users\xiaom\Desktop\Max\Itransition\RazorCoursework\obj\Debug\net5.0\Razor\Pages\Shared\_SearchReviewsPagingPartial.cshtml.g.cs
+C:\Users\xiaom\Desktop\Max\Itransition\RazorCoursework\obj\Debug\net5.0\Razor\Pages\Shared\_UserReviewsPagingPartial.cshtml.g.cs
+C:\Users\xiaom\Desktop\Max\Itransition\RazorCoursework\obj\Debug\net5.0\Razor\Pages\Shared\_ShowReviewsPartial.cshtml.g.cs
+C:\Users\xiaom\Desktop\Max\Itransition\RazorCoursework\obj\Debug\net5.0\Razor\Pages\EditReview.cshtml.g.cs

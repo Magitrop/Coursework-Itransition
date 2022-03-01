@@ -443,7 +443,7 @@ C:\Users\xiaom\Desktop\Max\Itransition\RazorCoursework\obj\Release\net5.0\RazorC
 C:\Users\xiaom\Desktop\Max\Itransition\RazorCoursework\obj\Release\net5.0\ref\RazorCoursework.dll
 C:\Users\xiaom\Desktop\Max\Itransition\RazorCoursework\obj\Release\net5.0\RazorCoursework.pdb
 C:\Users\xiaom\Desktop\Max\Itransition\RazorCoursework\obj\Release\net5.0\RazorCoursework.genruntimeconfig.cache
-C:\Users\xiaom\Desktop\Max\Itransition\RazorCoursework\obj\Release\net5.0\Razor\Pages\AllReviews.cshtml.g.cs
 C:\Users\xiaom\Desktop\Max\Itransition\RazorCoursework\obj\Release\net5.0\Razor\Pages\Home.cshtml.g.cs
 C:\Users\xiaom\Desktop\Max\Itransition\RazorCoursework\obj\Release\net5.0\Razor\Pages\SearchReviews.cshtml.g.cs
-C:\Users\xiaom\Desktop\Max\Itransition\RazorCoursework\obj\Release\net5.0\Razor\Pages\Shared\_ReviewsPagingPartial.cshtml.g.cs
+C:\Users\xiaom\Desktop\Max\Itransition\RazorCoursework\obj\Release\net5.0\Razor\Pages\Shared\_SearchReviewsPagingPartial.cshtml.g.cs
+C:\Users\xiaom\Desktop\Max\Itransition\RazorCoursework\obj\Release\net5.0\Razor\Pages\Shared\_UserReviewsPagingPartial.cshtml.g.cs
