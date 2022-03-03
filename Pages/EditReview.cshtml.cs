@@ -14,14 +14,13 @@ namespace RazorCoursework.Pages
     [Authorize]
     public class EditReviewModel : PageModel
     {
-        public string currentReviewId { get; set; }
+        public string CurrentReviewId { get; set; }
         public string ReviewSubjectName { get; set; }
         public string ReviewSubjectGenre { get; set; }
         public string ReviewText { get; set; }
         public string ReviewTags { get; set; }
 
-        [BindProperty]
-        public InputModel Input { get; set; }
+        [BindProperty] public InputModel Input { get; set; }
 
         public class InputModel
         {
@@ -41,9 +40,9 @@ namespace RazorCoursework.Pages
             public string Tags { get; set; }
         }
 
-        public void OnGet(string id)
+        public IActionResult OnGet(string id)
         {
-            currentReviewId = id;
+            CurrentReviewId = id;
             using (var context = new AppContentDbContext(
                    new DbContextOptionsBuilder<AppContentDbContext>()
                    .UseSqlServer(Startup.Connection)
@@ -52,9 +51,9 @@ namespace RazorCoursework.Pages
                 var currentReview = context.Reviews
                     .Include(r => r.TagRelations)
                     .ThenInclude(r => r.Tag)
-                    .FirstOrDefault(r => r.ReviewID == currentReviewId);
+                    .FirstOrDefault(r => r.ReviewID == id);
                 if (currentReview?.ReviewCreatorName != User.Identity.Name)
-                    RedirectToPage("/Home", new { user = User.Identity.Name, p = 1 });
+                    return RedirectToPage("/Home", new { user = User.Identity.Name, p = 1 });
                 else
                 {
                     ReviewSubjectName = currentReview.ReviewSubjectName;
@@ -63,6 +62,8 @@ namespace RazorCoursework.Pages
                     ReviewTags = string.Join(' ', currentReview.TagRelations.Select(r => r.Tag.TagName));
                 }
             }
+
+            return Page();
         }
 
         public IActionResult OnPost()
@@ -79,7 +80,7 @@ namespace RazorCoursework.Pages
                         .Include(r => r.Ratings)
                         .Include(r => r.TagRelations)
                         .ThenInclude(r => r.Tag);
-                    var currentReview = reviews.FirstOrDefault(r => r.ReviewID == currentReviewId);
+                    var currentReview = reviews.FirstOrDefault(r => r.ReviewID == Request.Form["CurrentReviewId"].ToString());
                     context.Reviews.Remove(currentReview);
                     var newReview = new Review()
                     {
@@ -89,7 +90,7 @@ namespace RazorCoursework.Pages
                         ReviewSubjectGenre = Input.ReviewSubjectGenre,
                         ReviewSubjectName = Input.ReviewSubjectName,
                         CreationDate = currentReview.CreationDate,
-                        TagRelations = currentReview.TagRelations
+                        TagRelations = new List<UserReviewAndTagRelation>()
                     };
                     context.Reviews.Add(newReview);
 

@@ -1,7 +1,7 @@
 ﻿<div class="row justify-content-center">
     @foreach (var r in Model.reviews)
     {
-    <div class="col-xl-5 col-lg-5 col-md-5 col-10 border border-dark text-center" style="margin: 10px">
+    <div class="col-10 border border-dark text-center" style="margin: 10px">
         <a class="text-muted"
            asp-area=""
            asp-page="/Home"
@@ -9,9 +9,11 @@
            asp-route-p="1">
             Автор: @r.ReviewCreatorName
         </a>
+        <br />
+        <small class="text-muted">Создан: @r.CreationDate</small>
+        <hr />
         <h4 style="margin-top: 30px; margin-bottom: 30px">@r.ReviewSubjectName</h4>
         <h5 class="text-muted">@r.ReviewSubjectGenre</h5>
-        <small class="text-muted">Создан: @r.CreationDate</small>
         <hr />
         <p>@r.ReviewText</p>
         <hr />
@@ -29,12 +31,19 @@
         </div>
         @if (r.ReviewCreatorName == User.Identity.Name)
         {
-            <hr />
-            <a class="text-muted"
+            <a
+               asp-area=""
+               asp-page="/RemoveReview"
+               asp-route-id="@r.ReviewID"
+               style="position: absolute; top: 10px; right: 10px; ">
+                <img src="https://img.icons8.com/windows/32/000000/trash.png" width="30" height="30" />
+            </a>
+            <a
                asp-area=""
                asp-page="/EditReview"
-               asp-route-id="@r.ReviewID">
-                Редактировать обзор
+               asp-route-id="@r.ReviewID"
+               style="position: absolute; top: 10px; right: 40px; ">
+                <img src="https://img.icons8.com/material-outlined/24/000000/edit--v1.png" width="25" height="25" />
             </a>
         }
     </div>

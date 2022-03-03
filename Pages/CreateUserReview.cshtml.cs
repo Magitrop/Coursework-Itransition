@@ -88,7 +88,7 @@ namespace RazorCoursework.Pages
                 }
             }
 
-            return Page();
+            return RedirectToPage("/Home", new { user = User.Identity.Name, p = 1 });
         }
     }
 }

@@ -140,3 +140,22 @@ GO
 COMMIT;
 GO
 
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220228184110_AddedReviewCreatorName')
+BEGIN
+    ALTER TABLE [Reviews] ADD [ReviewCreatorName] nvarchar(max) NULL;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220228184110_AddedReviewCreatorName')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20220228184110_AddedReviewCreatorName', N'5.0.13');
+END;
+GO
+
+COMMIT;
+GO
+

@@ -3,6 +3,19 @@
 @{
 }
 
+@if (Model.currentTag != null && Model.currentTag != string.Empty)
+{
+    <h2 class="text-center">
+        Обзоры пользователей с тегом @Model.currentTag
+    </h2>
+}
+else
+{
+    <h2 class="text-center">
+        Все обзоры пользователей
+    </h2>
+}
+
 @if (Model.pagesCount > 1)
 {
     <partial name="_SearchReviewsPagingPartial" />
