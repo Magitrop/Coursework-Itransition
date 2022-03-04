@@ -30,7 +30,7 @@ namespace RazorCoursework.Pages
                     .ThenInclude(r => r.Tag)
                     .FirstOrDefault(r => r.ReviewID == id);
                 CurrentReviewName = currentReview.ReviewSubjectName;
-                if (currentReview?.ReviewCreatorName != User.Identity.Name)
+                if (!User.Identity.IsAuthenticated || currentReview?.ReviewCreatorName != User.Identity.Name)
                     return RedirectToPage("/Home", new { user = User.Identity.Name, p = 1 });
             }
 
@@ -51,7 +51,6 @@ namespace RazorCoursework.Pages
                         .Include(r => r.Ratings)
                         .Include(r => r.TagRelations)
                         .ThenInclude(r => r.Tag);
-                    System.Diagnostics.Debug.WriteLine(Request.Form["CurrentReviewId"].ToString());
                     var currentReview = reviews.FirstOrDefault(r => r.ReviewID == Request.Form["CurrentReviewId"].ToString());
                     if (currentReview != null)
                     {

@@ -11,6 +11,8 @@
         </a>
         <br />
         <small class="text-muted">Создан: @r.CreationDate</small>
+        <br />
+        <small class="text-muted">Оценок "Мне нравится": @Model.GetLikesCount(r.ReviewID)</small>
         <hr />
         <h4 style="margin-top: 30px; margin-bottom: 30px">@r.ReviewSubjectName</h4>
         <h5 class="text-muted">@r.ReviewSubjectGenre</h5>
@@ -29,22 +31,39 @@
                 </a>
             }
         </div>
-        @if (r.ReviewCreatorName == User.Identity.Name)
+        @if (User.Identity.IsAuthenticated)
         {
-            <a
-               asp-area=""
-               asp-page="/RemoveReview"
-               asp-route-id="@r.ReviewID"
-               style="position: absolute; top: 10px; right: 10px; ">
-                <img src="https://img.icons8.com/windows/32/000000/trash.png" width="30" height="30" />
-            </a>
-            <a
-               asp-area=""
-               asp-page="/EditReview"
-               asp-route-id="@r.ReviewID"
-               style="position: absolute; top: 10px; right: 40px; ">
-                <img src="https://img.icons8.com/material-outlined/24/000000/edit--v1.png" width="25" height="25" />
-            </a>
+            <form id="rating" method="post">
+                <input type="hidden" name="ReviewID" value="@r.ReviewID" />
+                <input type="hidden" name="CurrentPage" value="@Model.currentPage" />
+                <input type="hidden" name="CurrentTag" value="@Model.currentTag" />
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <button type="submit" style="border: none; outline: none; position: absolute; top: 10px; right: 10px; ">
+                    @if (Model.AlreadyLikedReview(r.ReviewID))
+                    {
+                        <img src="https://img.icons8.com/material/24/000000/like--v1.png" width="25" height="25" />
+                    }
+                    else
+                    {
+                        <img src="https://img.icons8.com/material-outlined/24/000000/like--v1.png" width="25" height="25" />
+                    }
+                </button>
+            </form>
+            if (r.ReviewCreatorName == User.Identity.Name)
+            {
+                <a asp-area=""
+                   asp-page="/RemoveReview"
+                   asp-route-id="@r.ReviewID"
+                   style="position: absolute; top: 10px; right: 45px; ">
+                    <img src="https://img.icons8.com/windows/32/000000/trash.png" width="30" height="30" />
+                </a>
+                <a asp-area=""
+                   asp-page="/EditReview"
+                   asp-route-id="@r.ReviewID"
+                   style="position: absolute; top: 10px; right: 75px; ">
+                    <img src="https://img.icons8.com/material-outlined/24/000000/edit--v1.png" width="25" height="25" />
+                </a>
+            }
         }
     </div>
     }

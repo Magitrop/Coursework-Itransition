@@ -52,7 +52,7 @@ namespace RazorCoursework.Pages
                     .Include(r => r.TagRelations)
                     .ThenInclude(r => r.Tag)
                     .FirstOrDefault(r => r.ReviewID == id);
-                if (currentReview?.ReviewCreatorName != User.Identity.Name)
+                if (!User.Identity.IsAuthenticated || currentReview?.ReviewCreatorName != User.Identity.Name)
                     return RedirectToPage("/Home", new { user = User.Identity.Name, p = 1 });
                 else
                 {
