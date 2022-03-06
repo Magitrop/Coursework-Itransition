@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <sitemanifest>
-  <IisApp path="E:\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\" />
-  <dbfullsql path="E:\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\EFSQLScripts\RazorCoursework.Data.AppContentDbContext.sql" />
-  <dbfullsql path="E:\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\EFSQLScripts\RazorCoursework.Data.ApplicationDbContext.sql" />
+  <IisApp path="C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\" />
+  <dbfullsql path="C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0\PubTmp\EFSQLScripts\RazorCoursework.Data.AppContentDbContext.sql" />
+  <dbfullsql path="C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0\PubTmp\EFSQLScripts\RazorCoursework.Data.ApplicationDbContext.sql" />
 </sitemanifest>

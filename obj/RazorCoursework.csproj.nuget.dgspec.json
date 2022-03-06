@@ -1,25 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "E:\\C# Projects\\Coursework-Itransition\\RazorCoursework.csproj": {}
+    "C:\\Users\\xiaom\\Desktop\\Max\\Itransition\\Coursework-Itransition\\RazorCoursework.csproj": {}
   },
   "projects": {
-    "E:\\C# Projects\\Coursework-Itransition\\RazorCoursework.csproj": {
+    "C:\\Users\\xiaom\\Desktop\\Max\\Itransition\\Coursework-Itransition\\RazorCoursework.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\C# Projects\\Coursework-Itransition\\RazorCoursework.csproj",
+        "projectUniqueName": "C:\\Users\\xiaom\\Desktop\\Max\\Itransition\\Coursework-Itransition\\RazorCoursework.csproj",
         "projectName": "RazorCoursework",
-        "projectPath": "E:\\C# Projects\\Coursework-Itransition\\RazorCoursework.csproj",
-        "packagesPath": "C:\\Users\\magit\\.nuget\\packages\\",
-        "outputPath": "E:\\C# Projects\\Coursework-Itransition\\obj\\",
+        "projectPath": "C:\\Users\\xiaom\\Desktop\\Max\\Itransition\\Coursework-Itransition\\RazorCoursework.csproj",
+        "packagesPath": "C:\\Users\\xiaom\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\xiaom\\Desktop\\Max\\Itransition\\Coursework-Itransition\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "E:\\Visual Studio 2019\\Shared\\NuGetPackages"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
         ],
         "configFilePaths": [
-          "C:\\Users\\magit\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\xiaom\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
@@ -93,7 +95,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.405\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.404\\RuntimeIdentifierGraph.json"
         }
       }
     }

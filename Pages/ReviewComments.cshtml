@@ -3,32 +3,117 @@
 @{
 }
 
-<div class="col-10 border border-dark text-center" style="margin: 10px">
-    <a class="text-muted"
-       asp-area=""
-       asp-page="/Home"
-       asp-route-user="@Model.Review.ReviewCreatorName"
-       asp-route-p="1">
-        Автор: @Model.Review.ReviewCreatorName
-    </a>
-    <br />
-    <small class="text-muted">Создан: @Model.Review.CreationDate</small>
-    <hr />
-    <h4 style="margin-top: 30px; margin-bottom: 30px">@Model.Review.ReviewSubjectName</h4>
-    <h5 class="text-muted">@Model.Review.ReviewSubjectGenre</h5>
-    <hr />
-    <p>@Model.Review.ReviewText</p>
-    <hr />
-    <p>Теги:</p>
-    <div style="margin-bottom: 30px" class="d-block">
-        @foreach (var t in Model.Review.TagRelations)
+<div class="row justify-content-center">
+    <div class="col-10 border border-dark text-center" style="margin: 10px">
+        <a class="text-muted"
+           asp-area=""
+           asp-page="/Home"
+           asp-route-user="@Model.Review.ReviewCreatorName"
+           asp-route-p="1">
+            Автор: @Model.Review.ReviewCreatorName
+        </a>
+        <br />
+        <small class="text-muted">Создан: @Model.Review.CreationDate</small>
+        <hr />
+        <h4 style="margin-top: 30px; margin-bottom: 30px">@Model.Review.ReviewSubjectName</h4>
+        <h5 class="text-muted">@Model.Review.ReviewSubjectGenre</h5>
+        <hr />
+        <p>@Model.Review.ReviewText</p>
+        <hr />
+        <p>Теги:</p>
+        <div style="margin-bottom: 30px" class="d-block">
+            @foreach (var t in Model.Review.TagRelations)
+            {
+                <a class="btn btn-light btn-outline-dark"
+                   asp-page="SearchReviews"
+                   asp-route-tag="@t.Tag.TagName"
+                   asp-route-p="1">
+                    <span class="d-inline-block">@t.Tag.TagName</span>
+                </a>
+            }
+        </div>
+        @if (User.Identity.IsAuthenticated)
         {
-            <a class="btn btn-light btn-outline-dark"
-               asp-page="SearchReviews"
-               asp-route-tag="@t.Tag.TagName"
-               asp-route-p="1">
-                <span class="d-inline-block">@t.Tag.TagName</span>
-            </a>
+            <form id="form-like-@Model.Review.ReviewID" onsubmit="return false;">
+                <input type="hidden" name="ReviewID" value="@Model.Review.ReviewID" />
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <button id="btn-like-@Model.Review.ReviewID"
+                        type="submit"
+                        style="border: none;
+                                   outline: none;
+                                   position: absolute;
+                                   bottom: 10px;
+                                   left: 10px;
+                                   background: none">
+                    @if (Model.AlreadyLikedReview(Model.Review.ReviewID))
+                    {
+                        <img id="btn-like-img-@Model.Review.ReviewID"
+                             src="https://img.icons8.com/material/24/000000/like--v1.png"
+                             width="25" height="25" />
+                    }
+                    else
+                    {
+                        <img id="btn-like-img-@Model.Review.ReviewID"
+                             src="https://img.icons8.com/material-outlined/24/000000/like--v1.png"
+                             width="25" height="25" />
+                    }
+                    <small class="text-muted" id="likesCount-@Model.Review.ReviewID">
+                        @Model.GetLikesCount(Model.Review.ReviewID)
+                    </small>
+                </button>
+            </form>
+            if (Model.Review.ReviewCreatorName == User.Identity.Name)
+            {
+                <a asp-area=""
+                   asp-page="/RemoveReview"
+                   asp-route-id="@Model.Review.ReviewID"
+                   style="position: absolute; top: 10px; right: 10px; ">
+                    <img src="https://img.icons8.com/windows/32/000000/trash.png" width="30" height="30" />
+                </a>
+                <a asp-area=""
+                   asp-page="/EditReview"
+                   asp-route-id="@Model.Review.ReviewID"
+                   style="position: absolute; top: 10px; right: 40px; ">
+                    <img src="https://img.icons8.com/material-outlined/24/000000/edit--v1.png" width="25" height="25" />
+                </a>
+            }
         }
     </div>
 </div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $('[id^=btn-like]').on('click', function () {
+        var id = $(this).closest('form').serializeArray().reduce(function (obj, item) {
+            obj[item.name] = item.value;
+            return obj;
+        }, {})['ReviewID'];
+        $.ajax({
+            type: "POST",
+            url: "/Home?handler=Like",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            data: id,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                var responseParts = response.split(';');
+                $('#likesCount-' + id).text(responseParts[0]);
+                if (responseParts[1] == 'True') {
+                    $('#btn-like-img-' + id)
+                        .attr('src', 'https://img.icons8.com/material-outlined/24/000000/like--v1.png');
+                }
+                else if (responseParts[1] == 'False') {
+                    $('#btn-like-img-' + id)
+                        .attr('src', 'https://img.icons8.com/material/24/000000/like--v1.png');
+                }
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+        return false;
+    })
+</script>

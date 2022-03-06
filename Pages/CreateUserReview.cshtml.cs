@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.RegularExpressions;
 
 namespace RazorCoursework.Pages
 {
@@ -32,7 +33,7 @@ namespace RazorCoursework.Pages
             [Display(Name = "Текст обзора")]
             public string ReviewText { get; set; }
 
-            [Display(Name = "Теги (указываются через пробелы)")]
+            [Display(Name = "Теги (указываются через запятую)")]
             public string Tags { get; set; }
         }
 
@@ -57,10 +58,12 @@ namespace RazorCoursework.Pages
                     };
                     context.Reviews.Add(newReview);
 
-                    foreach (var tag in from t in Input.Tags.Split(' ')
+                    foreach (var t in from t in Input.Tags.Split(',')
                                         where t.Length > 0
-                                        select t)
+                                        select t.Trim())
                     {
+                        var tag = Regex.Replace(t, @"[ ]{2,}", " ");
+
                         Tag newTag = context.Tags
                             .Include(t => t.ReviewRelations)
                             .FirstOrDefault(_t => _t.TagName == tag);

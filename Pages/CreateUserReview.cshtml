@@ -14,7 +14,15 @@
     </div>
     <div class="form-group">
         <label asp-for="Input.ReviewSubjectGenre"></label>
-        <input asp-for="Input.ReviewSubjectGenre" class="form-control" />
+        <select asp-for="Input.ReviewSubjectGenre" class="form-control">
+            <option selected disabled>Выберите жанр</option>
+            <option value="Фильмы">Фильмы</option>
+            <option value="Мультфильмы">Мультфильмы</option>
+            <option value="Сериалы">Сериалы</option>
+            <option value="Книги">Книги</option>
+            <option value="Видеоигры">Видеоигры</option>
+            <option value="Настольные игры">Настольные игры</option>
+        </select>
         <span asp-validation-for="Input.ReviewSubjectGenre" class="text-danger"></span>
     </div>
     <div class="form-group">
@@ -24,7 +32,7 @@
     </div>
     <div class="form-group">
         <label asp-for="Input.Tags"></label>
-        <input pattern="[A-Za-z ]*" asp-for="Input.Tags" class="form-control" />
+        <input pattern="[A-Za-zА-Яа-я, ]*" asp-for="Input.Tags" class="form-control" />
         <span asp-validation-for="Input.Tags" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-primary">Добавить обзор</button>

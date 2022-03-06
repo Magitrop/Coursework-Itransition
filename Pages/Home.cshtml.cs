@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace RazorCoursework.Pages
 {
@@ -65,10 +67,16 @@ namespace RazorCoursework.Pages
             }
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostLike()
         {
-            if (ModelState.IsValid)
+            MemoryStream stream = new MemoryStream();
+            await Request.Body.CopyToAsync(stream);
+            stream.Position = 0;
+            string reviewID = string.Empty;
+            bool alreadyLiked = false;
+            using (StreamReader reader = new StreamReader(stream))
             {
+                reviewID = await reader.ReadToEndAsync();
                 using (var context = new AppContentDbContext(
                    new DbContextOptionsBuilder<AppContentDbContext>()
                    .UseSqlServer(Startup.Connection)
@@ -79,31 +87,30 @@ namespace RazorCoursework.Pages
                         .Include(r => r.Ratings)
                         .Include(r => r.TagRelations)
                         .ThenInclude(r => r.Tag);
-                    var currentReview = reviews.FirstOrDefault(r => r.ReviewID == Request.Form["ReviewID"].ToString());
+                    var currentReview = await reviews.FirstOrDefaultAsync(r => r.ReviewID == reviewID);
                     if (currentReview != null)
                     {
                         string currentUserID = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
-                        Like alreadyLiked = context.ReviewLikes
-                            .FirstOrDefault(l =>
+                        Like like = await context.ReviewLikes
+                            .FirstOrDefaultAsync(l =>
                             l.ReviewID == currentReview.ReviewID &&
                             l.UserID == currentUserID);
-                        if (alreadyLiked == null)
+                        if (alreadyLiked = like == null)
                         {
-                            Like like = new Like()
+                            like = new Like()
                             {
                                 Review = currentReview,
                                 UserID = currentUserID
                             };
-                            context.ReviewLikes.Add(like);
+                            await context.ReviewLikes.AddAsync(like);
                         }
                         else
-                            context.ReviewLikes.Remove(alreadyLiked);
-                        context.SaveChanges();
+                            context.ReviewLikes.Remove(like);
+                        await context.SaveChangesAsync();
                     }
                 }
             }
-
-            return RedirectToPage("/Home", new { user = User.Identity.Name, p = int.Parse(Request.Form["CurrentPage"]) });
+            return new JsonResult(GetLikesCount(reviewID).ToString() + ';' + (!alreadyLiked).ToString());
         }
 
         public bool AlreadyLikedReview(string reviewID)

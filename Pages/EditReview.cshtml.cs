@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -94,10 +95,12 @@ namespace RazorCoursework.Pages
                     };
                     context.Reviews.Add(newReview);
 
-                    foreach (var tag in from t in Input.Tags.Split(' ')
+                    foreach (var t in from t in Input.Tags.Split(',')
                                         where t.Length > 0
                                         select t)
                     {
+                        var tag = Regex.Replace(t, @"[ ]{2,}", " ");
+
                         Tag newTag = context.Tags
                             .Include(t => t.ReviewRelations)
                             .FirstOrDefault(_t => _t.TagName == tag);
