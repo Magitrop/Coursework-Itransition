@@ -47,13 +47,13 @@
                                    background: none">
                     @if (Model.AlreadyLikedReview(Model.Review.ReviewID))
                     {
-                        <img id="btn-like-img-@Model.Review.ReviewID"
+                        <img id="img-like-@Model.Review.ReviewID"
                              src="https://img.icons8.com/material/24/000000/like--v1.png"
                              width="25" height="25" />
                     }
                     else
                     {
-                        <img id="btn-like-img-@Model.Review.ReviewID"
+                        <img id="img-like-@Model.Review.ReviewID"
                              src="https://img.icons8.com/material-outlined/24/000000/like--v1.png"
                              width="25" height="25" />
                     }
@@ -61,6 +61,32 @@
                         @Model.GetLikesCount(Model.Review.ReviewID)
                     </small>
                 </button>
+            </form>
+            <form id="form-rating-@Model.Review.ReviewID" onsubmit="return false;">
+                <input type="hidden" name="ReviewID" value="@Model.Review.ReviewID" />
+                <div asp-validation-summary="All" class="text-danger"></div>
+                @for (int i = 1; i <= 5; i++)
+                {
+                    <button id="btn-rating-@i-@Model.Review.ReviewID"
+                            data-rating="@i"
+                            type="submit"
+                            style="border: none;
+                                   outline: none;
+                                   background: none">
+                        @if (Model.ReviewRating >= i)
+                        {
+                            <img id="img-rating-@i-@Model.Review.ReviewID"
+                                 src="https://img.icons8.com/ios-filled/30/000000/star--v1.png"
+                                 width="25" height="25" />
+                        }
+                        else
+                        {
+                            <img id="img-rating-@i-@Model.Review.ReviewID"
+                                 src="https://img.icons8.com/ios/30/000000/star--v1.png"
+                                 width="25" height="25" />
+                        }
+                    </button>
+                }
             </form>
             if (Model.Review.ReviewCreatorName == User.Identity.Name)
             {
@@ -78,19 +104,25 @@
                 </a>
             }
         }
+        <p style="margin-bottom: 10px">
+            Средний рейтинг:
+            <span id="rating-text">
+                @Model.GetAverageRating(Model.Review.ReviewID) / 5
+            </span>
+        </p>
     </div>
 </div>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
-    $('[id^=btn-like]').on('click', function () {
+    $('[id^="btn-like"]').on('click', function () {
         var id = $(this).closest('form').serializeArray().reduce(function (obj, item) {
             obj[item.name] = item.value;
             return obj;
         }, {})['ReviewID'];
         $.ajax({
             type: "POST",
-            url: "/Home?handler=Like",
+            url: "/ReviewComments?handler=Like",
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("XSRF-TOKEN",
                     $('input:hidden[name="__RequestVerificationToken"]').val());
@@ -102,13 +134,56 @@
                 var responseParts = response.split(';');
                 $('#likesCount-' + id).text(responseParts[0]);
                 if (responseParts[1] == 'True') {
-                    $('#btn-like-img-' + id)
+                    $('#img-like-' + id)
                         .attr('src', 'https://img.icons8.com/material-outlined/24/000000/like--v1.png');
                 }
                 else if (responseParts[1] == 'False') {
-                    $('#btn-like-img-' + id)
+                    $('#img-like-' + id)
                         .attr('src', 'https://img.icons8.com/material/24/000000/like--v1.png');
                 }
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+        return false;
+    })
+    $('[id^="btn-rating"]').on('click', function () {
+        var formData = $(this).closest('form').serializeArray().reduce(function (obj, item) {
+            obj[item.name] = item.value;
+            return obj;
+        }, {});
+        var id = formData['ReviewID'];
+        var ratingValue = $(this).data('rating');
+        var data = id + ';' + ratingValue;
+        $.ajax({
+            type: "POST",
+            url: "/ReviewComments?handler=Rating",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                var responseParts = response.split(';');
+                if (responseParts[0] == 'False') {
+                    for (var i = 1; i <= 5; i++) {
+                        if (i <= ratingValue)
+                            $('#img-rating-' + i + '-' + id)
+                                .attr('src', 'https://img.icons8.com/ios-filled/30/000000/star--v1.png');
+                        else
+                            $('#img-rating-' + i + '-' + id)
+                                .attr('src', 'https://img.icons8.com/ios/30/000000/star--v1.png');
+                    }
+                }
+                else
+                    for (var i = 1; i <= 5; i++) {
+                        $('#img-rating-' + i + '-' + id)
+                            .attr('src', 'https://img.icons8.com/ios/30/000000/star--v1.png');
+                    }
+                $('#rating-text').text(responseParts[1] + ' / 5');
             },
             failure: function (response) {
                 alert(response);

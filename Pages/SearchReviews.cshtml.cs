@@ -87,47 +87,6 @@ namespace RazorCoursework.Pages
             }
         }
 
-        public IActionResult OnPost()
-        {
-            if (ModelState.IsValid)
-            {
-                using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-                {
-                    var reviews = context.Reviews
-                        .Include(r => r.Likes)
-                        .Include(r => r.Ratings)
-                        .Include(r => r.TagRelations)
-                        .ThenInclude(r => r.Tag);
-                    var currentReview = reviews.FirstOrDefault(r => r.ReviewID == Request.Form["ReviewID"].ToString());
-                    if (currentReview != null)
-                    {
-                        string currentUserID = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
-                        Like alreadyLiked = context.ReviewLikes
-                            .FirstOrDefault(l =>
-                            l.ReviewID == currentReview.ReviewID &&
-                            l.UserID == currentUserID);
-                        if (alreadyLiked == null)
-                        {
-                            Like like = new Like()
-                            {
-                                Review = currentReview,
-                                UserID = currentUserID
-                            };
-                            context.ReviewLikes.Add(like);
-                        }
-                        else
-                            context.ReviewLikes.Remove(alreadyLiked);
-                        context.SaveChanges();
-                    }
-                }
-            }
-
-            return RedirectToPage("/SearchReviews", new { tag = Request.Form["CurrentTag"].ToString(), p = int.Parse(Request.Form["CurrentPage"]) });
-        }
-
         public bool AlreadyLikedReview(string reviewID)
         {
             bool result = true;

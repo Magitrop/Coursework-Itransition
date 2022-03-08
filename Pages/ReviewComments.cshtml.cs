@@ -14,6 +14,7 @@ namespace RazorCoursework.Pages
     public class ReviewCommentsModel : PageModel
     {
         public Review Review { get; set; }
+        public int ReviewRating { get; set; }
 
         public IActionResult OnGet(string id)
         {
@@ -27,8 +28,105 @@ namespace RazorCoursework.Pages
                     .ThenInclude(r => r.Tag)
                     .FirstOrDefault(r => r.ReviewID == id);
             }
-
+            ReviewRating = GetRating(id);
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostLike()
+        {
+            MemoryStream stream = new MemoryStream();
+            await Request.Body.CopyToAsync(stream);
+            stream.Position = 0;
+            string reviewID = string.Empty;
+            bool alreadyLiked = false;
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                reviewID = await reader.ReadToEndAsync();
+                using (var context = new AppContentDbContext(
+                   new DbContextOptionsBuilder<AppContentDbContext>()
+                   .UseSqlServer(Startup.Connection)
+                   .Options))
+                {
+                    var reviews = context.Reviews
+                        .Include(r => r.Likes)
+                        .Include(r => r.Ratings)
+                        .Include(r => r.TagRelations)
+                        .ThenInclude(r => r.Tag);
+                    var currentReview = await reviews.FirstOrDefaultAsync(r => r.ReviewID == reviewID);
+                    if (currentReview != null)
+                    {
+                        string currentUserID = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                        Like like = await context.ReviewLikes
+                            .FirstOrDefaultAsync(l =>
+                            l.ReviewID == currentReview.ReviewID &&
+                            l.UserID == currentUserID);
+                        if (alreadyLiked = like == null)
+                        {
+                            like = new Like()
+                            {
+                                Review = currentReview,
+                                UserID = currentUserID
+                            };
+                            await context.ReviewLikes.AddAsync(like);
+                        }
+                        else
+                            context.ReviewLikes.Remove(like);
+                        await context.SaveChangesAsync();
+                    }
+                }
+            }
+            return new JsonResult(GetLikesCount(reviewID).ToString() + ';' + (!alreadyLiked).ToString());
+        }
+
+        public async Task<IActionResult> OnPostRating()
+        {
+            MemoryStream stream = new MemoryStream();
+            await Request.Body.CopyToAsync(stream);
+            stream.Position = 0;
+            string reviewID = string.Empty;
+            bool shouldRemoveRating = false;
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                var data = (await reader.ReadToEndAsync()).Split(';');
+                reviewID = data[0];
+                int ratingValue = int.Parse(data[1]);
+                using (var context = new AppContentDbContext(
+                   new DbContextOptionsBuilder<AppContentDbContext>()
+                   .UseSqlServer(Startup.Connection)
+                   .Options))
+                {
+                    var reviews = context.Reviews
+                        .Include(r => r.Likes)
+                        .Include(r => r.Ratings)
+                        .Include(r => r.TagRelations)
+                        .ThenInclude(r => r.Tag);
+                    var currentReview = await reviews.FirstOrDefaultAsync(r => r.ReviewID == reviewID);
+                    if (currentReview != null)
+                    {
+                        string currentUserID = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                        Rating rating = await context.ReviewRatings
+                            .FirstOrDefaultAsync(l =>
+                                l.ReviewID == currentReview.ReviewID &&
+                                l.UserID == currentUserID);
+                        if (rating == null)
+                        {
+                            rating = new Rating()
+                            {
+                                Review = currentReview,
+                                UserID = currentUserID,
+                                RatingValue = ratingValue
+                            };
+                            await context.ReviewRatings.AddAsync(rating);
+                        }
+                        else if (shouldRemoveRating = rating.RatingValue == ratingValue)
+                            context.ReviewRatings.Remove(rating);
+                        else
+                            rating.RatingValue = ratingValue;
+                        await context.SaveChangesAsync();
+                    }
+                }
+            }
+            return new JsonResult(shouldRemoveRating.ToString() + ";" + GetAverageRating(reviewID).ToString());
         }
 
         public bool AlreadyLikedReview(string reviewID)
@@ -39,9 +137,9 @@ namespace RazorCoursework.Pages
                    .UseSqlServer(Startup.Connection)
                    .Options))
             {
-                string currentuserID = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                string currentUserID = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
                 result = context.ReviewLikes.Any(like =>
-                    like.UserID == currentuserID &&
+                    like.UserID == currentUserID &&
                     like.ReviewID == reviewID);
             }
             return result;
@@ -56,6 +154,41 @@ namespace RazorCoursework.Pages
                    .Options))
             {
                 result = context.ReviewLikes.Where(like => like.ReviewID == reviewID).Count();
+            }
+            return result;
+        }
+
+        public int GetRating(string reviewID)
+        {
+            int result;
+            using (var context = new AppContentDbContext(
+                   new DbContextOptionsBuilder<AppContentDbContext>()
+                   .UseSqlServer(Startup.Connection)
+                   .Options))
+            {
+                string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                result = context.ReviewRatings.Where(rating =>
+                    rating.ReviewID == reviewID &&
+                    rating.UserID == currentUserID).FirstOrDefault()?.RatingValue ?? 0;
+            }
+            return result;
+        }
+
+        public double GetAverageRating(string reviewID)
+        {
+            double result;
+            using (var context = new AppContentDbContext(
+                   new DbContextOptionsBuilder<AppContentDbContext>()
+                   .UseSqlServer(Startup.Connection)
+                   .Options))
+            {
+                string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                var ratings = context.ReviewRatings
+                    .Where(rating => rating.ReviewID == reviewID);
+                double count = ratings.Count();
+                if (count == 0)
+                    result = 0;
+                else result = Math.Round(ratings.Sum(rating => rating.RatingValue) / count, 3);
             }
             return result;
         }
