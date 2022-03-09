@@ -95,5 +95,19 @@ namespace RazorCoursework.Pages
             }
             return result;
         }
+
+        public int GetCreatorLikesCount(string userID)
+        {
+            int result = 0;
+            using (var context = new AppContentDbContext(
+                   new DbContextOptionsBuilder<AppContentDbContext>()
+                   .UseSqlServer(Startup.Connection)
+                   .Options))
+            {
+                var creatorReviews = context.Reviews.Where(r => r.ReviewCreatorID == userID);
+                result = context.ReviewLikes.Where(like => creatorReviews.Any(r => r.ReviewID == like.ReviewID)).Count();
+            }
+            return result;
+        }
     }
 }

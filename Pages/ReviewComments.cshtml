@@ -10,7 +10,9 @@
            asp-page="/Home"
            asp-route-user="@Model.Review.ReviewCreatorName"
            asp-route-p="1">
-            Автор: @Model.Review.ReviewCreatorName
+            Автор: @Model.Review.ReviewCreatorName (@Model.GetCreatorLikesCount(Model.Review.ReviewCreatorID) 
+            <img src="https://img.icons8.com/material/24/000000/like--v1.png"
+                 width="15" height="15" />)
         </a>
         <br />
         <small class="text-muted">Создан: @Model.Review.CreationDate</small>
@@ -110,6 +112,31 @@
                 @Model.GetAverageRating(Model.Review.ReviewID) / 5
             </span>
         </p>
+        <br />
+        @for (int i = 1; i <= 5; i++)
+        {
+            <button id="btn-author-rating-@i-@Model.Review.ReviewID"
+                    data-rating="@i"
+                    style="border: none;
+                      outline: none;
+                      background: none">
+                @if (Model.ReviewAuthorRating >= i)
+                {
+                    <img id="img-author-rating-@i-@Model.Review.ReviewID"
+                         src="https://img.icons8.com/ios-filled/30/000000/star--v1.png"
+                         width="25" height="25" />
+                }
+                else
+                {
+                    <img id="img-rating-@i-@Model.Review.ReviewID"
+                         src="https://img.icons8.com/ios/30/000000/star--v1.png"
+                         width="25" height="25" />
+                }
+            </button>
+        }
+        <p style="margin-bottom: 10px">
+            Рейтинг автора
+        </p>
     </div>
 </div>
 
@@ -169,14 +196,13 @@
             success: function (response) {
                 var responseParts = response.split(';');
                 if (responseParts[0] == 'False') {
-                    for (var i = 1; i <= 5; i++) {
+                    for (var i = 1; i <= 5; i++)
                         if (i <= ratingValue)
                             $('#img-rating-' + i + '-' + id)
                                 .attr('src', 'https://img.icons8.com/ios-filled/30/000000/star--v1.png');
                         else
                             $('#img-rating-' + i + '-' + id)
                                 .attr('src', 'https://img.icons8.com/ios/30/000000/star--v1.png');
-                    }
                 }
                 else
                     for (var i = 1; i <= 5; i++) {

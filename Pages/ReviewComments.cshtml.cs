@@ -15,6 +15,7 @@ namespace RazorCoursework.Pages
     {
         public Review Review { get; set; }
         public int ReviewRating { get; set; }
+        public int ReviewAuthorRating { get; set; }
 
         public IActionResult OnGet(string id)
         {
@@ -29,6 +30,7 @@ namespace RazorCoursework.Pages
                     .FirstOrDefault(r => r.ReviewID == id);
             }
             ReviewRating = GetRating(id);
+            ReviewAuthorRating = GetAuthorRating(id);
             return Page();
         }
 
@@ -174,6 +176,22 @@ namespace RazorCoursework.Pages
             return result;
         }
 
+        public int GetAuthorRating(string reviewID)
+        {
+            int result;
+            using (var context = new AppContentDbContext(
+                   new DbContextOptionsBuilder<AppContentDbContext>()
+                   .UseSqlServer(Startup.Connection)
+                   .Options))
+            {
+                string authorID = Review.ReviewCreatorID;
+                result = context.ReviewRatings.Where(rating =>
+                    rating.ReviewID == reviewID &&
+                    rating.UserID == authorID).FirstOrDefault()?.RatingValue ?? 0;
+            }
+            return result;
+        }
+
         public double GetAverageRating(string reviewID)
         {
             double result;
@@ -189,6 +207,20 @@ namespace RazorCoursework.Pages
                 if (count == 0)
                     result = 0;
                 else result = Math.Round(ratings.Sum(rating => rating.RatingValue) / count, 3);
+            }
+            return result;
+        }
+
+        public int GetCreatorLikesCount(string userID)
+        {
+            int result = 0;
+            using (var context = new AppContentDbContext(
+                   new DbContextOptionsBuilder<AppContentDbContext>()
+                   .UseSqlServer(Startup.Connection)
+                   .Options))
+            {
+                var creatorReviews = context.Reviews.Where(r => r.ReviewCreatorID == userID);
+                result = context.ReviewLikes.Where(like => creatorReviews.Any(r => r.ReviewID == like.ReviewID)).Count();
             }
             return result;
         }

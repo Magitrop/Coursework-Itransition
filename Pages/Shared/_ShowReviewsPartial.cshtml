@@ -42,7 +42,9 @@
                        asp-page="/Home"
                        asp-route-user="@r.ReviewCreatorName"
                        asp-route-p="1">
-                        @r.ReviewCreatorName
+                        @r.ReviewCreatorName (@Model.GetCreatorLikesCount(r.ReviewCreatorID) 
+                        <img src="https://img.icons8.com/material/24/000000/like--v1.png"
+                             width="15" height="15" />)
                     </a>
                 </td>
                 <td class="border border-dark">
