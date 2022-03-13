@@ -159,3 +159,28 @@ GO
 COMMIT;
 GO
 
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220311085117_AddedUserPreferences')
+BEGIN
+    CREATE TABLE [UserPreferences] (
+        [PreferenceID] nvarchar(450) NOT NULL,
+        [UserID] nvarchar(max) NULL,
+        [IsDarkTheme] bit NOT NULL,
+        [IsEnglishVersion] bit NOT NULL,
+        CONSTRAINT [PK_UserPreferences] PRIMARY KEY ([PreferenceID])
+    );
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220311085117_AddedUserPreferences')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20220311085117_AddedUserPreferences', N'5.0.13');
+END;
+GO
+
+COMMIT;
+GO
+

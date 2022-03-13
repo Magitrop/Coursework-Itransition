@@ -109,5 +109,29 @@ namespace RazorCoursework.Pages
             }
             return result;
         }
+
+        public async Task<IActionResult> OnPostUserPreferences()
+        {
+            MemoryStream stream = new MemoryStream();
+            await Request.Body.CopyToAsync(stream);
+            stream.Position = 0;
+            UserPreferences preferences;
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                var data = (await reader.ReadToEndAsync()).Split(';');
+                bool isAuthenticated = bool.Parse(data[0]);
+                string userID = data[1];
+                using (var context = new AppContentDbContext(
+                   new DbContextOptionsBuilder<AppContentDbContext>()
+                   .UseSqlServer(Startup.Connection)
+                   .Options))
+                {
+                    if (isAuthenticated)
+                        preferences = AppContentDbContext.GetUserPreferences(userID);
+                    else preferences = new UserPreferences();
+                }
+            }
+            return new JsonResult(preferences.IsDarkTheme + ";" + preferences.IsEnglishVersion);
+        }
     }
 }

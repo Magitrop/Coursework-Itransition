@@ -10,12 +10,24 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Http;
+using CG.Web.MegaApiClient;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using Dropbox.Api;
 
 namespace RazorCoursework.Pages
 {
     [Authorize]
     public class CreateUserReviewModel : PageModel
     {
+        private readonly IWebHostEnvironment _appEnvironment;
+
+        public CreateUserReviewModel(IWebHostEnvironment appEnvironment)
+        {
+            _appEnvironment = appEnvironment;
+        }
+
         [BindProperty]
         public InputModel Input { get; set; }
 
@@ -31,16 +43,20 @@ namespace RazorCoursework.Pages
 
             [Required(ErrorMessage = "Введите текст обзора.")]
             [Display(Name = "Текст обзора")]
+            [DataType(DataType.MultilineText)]
+            //[MinLength(length: 100, ErrorMessage = "Текст обзора должен быть не короче 100 символов.")]
             public string ReviewText { get; set; }
 
             [Display(Name = "Теги (указываются через запятую)")]
             public string Tags { get; set; }
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPost()
         {
             if (ModelState.IsValid)
             {
+                var pictureLinks = await GetPictureLinks();
+
                 using (var context = new AppContentDbContext(
                    new DbContextOptionsBuilder<AppContentDbContext>()
                    .UseSqlServer(Startup.Connection)
@@ -54,7 +70,8 @@ namespace RazorCoursework.Pages
                         ReviewSubjectGenre = Input.ReviewSubjectGenre,
                         ReviewSubjectName = Input.ReviewSubjectName,
                         CreationDate = DateTime.Now,
-                        TagRelations = new List<UserReviewAndTagRelation>()
+                        TagRelations = new List<UserReviewAndTagRelation>(),
+                        AttachedPictureLinks = pictureLinks
                     };
                     context.Reviews.Add(newReview);
 
@@ -93,5 +110,104 @@ namespace RazorCoursework.Pages
 
             return RedirectToPage("/Home", new { user = User.Identity.Name, p = 1 });
         }
+
+        private async Task<string> GetPictureLinks()
+        {
+            if (Request.Form.Files == null || Request.Form.Files.Count == 0)
+                return string.Empty;
+
+            var tempDirectory = _appEnvironment.WebRootPath + "/files/";
+            if (!Directory.Exists(tempDirectory))
+                Directory.CreateDirectory(tempDirectory);
+
+            string pictureLinks = string.Empty;
+            using (var dbx = new DropboxClient("yvwtJ6G2tG0AAAAAAAAAAdQTdoQZAz8BXbFqFTSxCWF31KZNiRGYuqHThF_uAYLA"))
+            {
+                foreach (var file in Request.Form.Files)
+                {
+                    string filepath = string.Empty;
+                    if (file.Length > 0)
+                    {
+                        using (var stream = new FileStream(
+                            tempDirectory + Guid.NewGuid() + "_" + file.FileName, FileMode.CreateNew))
+                        {
+                            file.CopyTo(stream);
+                            filepath = stream.Name;
+                        }
+                    }
+                    using (var fileStream = System.IO.File.Open(filepath, FileMode.Open))
+                    {
+                        //if (fileStream.Length <= 4096 * 1024)
+                        {
+                            var uploaded = await dbx.Files.UploadAsync(
+                                "/" + Guid.NewGuid() + "_" + file.FileName,
+                                body: fileStream);
+                            pictureLinks += (await dbx.Files.GetTemporaryLinkAsync(uploaded.PathLower)).Link + ";";
+                        }
+                    }
+                    System.IO.File.Delete(filepath);
+                }
+            }
+
+            return pictureLinks;
+        }
+
+        /*private string GetPictureLinks()
+        {
+            if (Request.Form.Files == null || Request.Form.Files.Count == 0)
+                return string.Empty;
+
+            var tempDirectory = _appEnvironment.WebRootPath + "/files/";
+            if (!Directory.Exists(tempDirectory))
+                Directory.CreateDirectory(tempDirectory);
+
+            MegaApiClient client = new MegaApiClient();
+            client.Login("magitrop11@list.ru", "CsF.8h77kEVwD.N");
+
+            IEnumerable<INode> nodes = client.GetNodes();
+            INode root = nodes.Single(x => x.Type == NodeType.Root);
+
+            string pictureLinks = string.Empty;
+            foreach (var file in Request.Form.Files)
+            {
+                string filepath = string.Empty;
+                if (file.Length > 0)
+                {
+                    using (var stream = new FileStream(
+                        tempDirectory + Guid.NewGuid() + "_" + file.FileName, FileMode.CreateNew))
+                    {
+                        file.CopyTo(stream);
+                        filepath = stream.Name;
+                    }
+                }
+                INode myFile = client.UploadFile(filepath, root);
+                Uri downloadLink = client.GetDownloadLink(myFile);
+                pictureLinks += downloadLink.AbsoluteUri + ";";
+                System.IO.File.Delete(filepath);
+            }
+            client.Logout();
+
+            return pictureLinks;
+        }*/
+    }
+}
+
+[AttributeUsage(
+    AttributeTargets.Property |
+    AttributeTargets.Field | 
+    AttributeTargets.Parameter, 
+    AllowMultiple = false)]
+public sealed class MaxFilesCountAttribute : ValidationAttribute
+{
+    private readonly int _maxFilesCount;
+    public MaxFilesCountAttribute(int maxFilesCount)
+    {
+        _maxFilesCount = maxFilesCount;
+    }
+
+    public override bool IsValid(object value)
+    {
+        var file = value as IFormFileCollection;
+        return file != null && file.Count <= _maxFilesCount;
     }
 }

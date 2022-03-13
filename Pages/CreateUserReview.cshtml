@@ -1,11 +1,12 @@
 ﻿@page
 @model RazorCoursework.Pages.CreateUserReviewModel
 @{
+
 }
 
 <h2>Добавить новый обзор</h2>
 
-<form id="review" method="post">
+<form id="review" method="post" enctype="multipart/form-data">
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
         <label asp-for="Input.ReviewSubjectName"></label>
@@ -35,5 +36,74 @@
         <input pattern="[A-Za-zА-Яа-я, ]*" asp-for="Input.Tags" class="form-control" />
         <span asp-validation-for="Input.Tags" class="text-danger"></span>
     </div>
+    <div class="form-group" id="group-files">
+        <input type="hidden" id="uploaded-files-count" name="FilesCount" value="0" />
+        <label>Прикрепить изображения</label>
+        <input name="File-1"
+               type="file"
+               class="form-control-file"
+               accept="image/*" />
+    </div>
     <button type="submit" class="btn btn-primary">Добавить обзор</button>
 </form>
+
+
+@section scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        var filesCount = 0;
+
+        $('#group-files').on('change', 'input[type=file]', function () {
+            filesCount++;
+            $(this)
+                .parent()
+                .append('<div id="uploaded-file-' + filesCount + '"><img /></div>')
+                .children('div')
+                .append('<button id="remove-image-' + filesCount + '" type="button">x</button>')
+                @*.children('button')
+                .on("click", function (e) {
+                    $('#File-' + filesCount).remove();
+                    $(this).parent().remove();
+                });*@
+
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#uploaded-file-' + filesCount + ' img')
+                    .attr("src", e.target.result)
+                    .css('width', '100%');
+            }
+            reader.readAsDataURL($(this)[0].files[0]);
+            $(this).css('display', 'none');
+
+            $(this).parent().append(
+                '<input name="File-' + (filesCount + 1) +
+                '" id="File-' + (filesCount + 1) +
+                '" type="file" class="form-control-file" accept="image/*" />');
+        })
+
+        function onFileAdded(elem) {
+            @*if (typeof (FileReader) != "undefined") {
+                filesCount++;
+                console.log(filesCount);
+                $('#group-files').append('<img />').addClass('uploaded-file-' + filesCount);//.attr('id', 'uploaded-file-' + filesCount);
+
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('.uploaded-file-' + filesCount).attr("src", e.target.result);
+                }
+                reader.readAsDataURL($(this)[0].files[0]);
+                $(elem).css('display', 'none');
+                $('#group-files')
+                    .append(
+                        '<input name="File-' + (filesCount + 1) +
+                        '" type="file" class="form-control-file" accept="image/*" />')
+                    .change(onFileAdded(this));
+            }
+            else {
+                alert("This browser does not support FileReader.");
+            }*@
+        }
+    </script>
+}

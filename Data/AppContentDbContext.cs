@@ -14,6 +14,7 @@ namespace RazorCoursework.Data
         public DbSet<UserReviewAndTagRelation> ReviewAndTagRelations { get; set; }
         public DbSet<Rating> ReviewRatings { get; set; }
         public DbSet<Like> ReviewLikes { get; set; }
+        public DbSet<UserPreferences> UserPreferences { get; set; }
 
         public AppContentDbContext(DbContextOptions<AppContentDbContext> options)
             : base(options)
@@ -48,6 +49,55 @@ namespace RazorCoursework.Data
                 .HasForeignKey(prop => prop.TagID);
 
             base.OnModelCreating(modelBuilder);
+        }
+
+        public static void CreateUserPreferences(string userID)
+        {
+            using (var context = new AppContentDbContext(
+                   new DbContextOptionsBuilder<AppContentDbContext>()
+                   .UseSqlServer(Startup.Connection)
+                   .Options))
+            {
+                UserPreferences preferences = new UserPreferences()
+                {
+                    UserID = userID,
+                    IsDarkTheme = false,
+                    IsEnglishVersion = false
+                };
+                context.UserPreferences.Add(preferences);
+                context.SaveChanges();
+            }
+        }
+
+        public static UserPreferences GetUserPreferences(string userID)
+        {
+            if (userID == null)
+                return new UserPreferences();
+
+            UserPreferences preferences;
+            using (var context = new AppContentDbContext(
+                   new DbContextOptionsBuilder<AppContentDbContext>()
+                   .UseSqlServer(Startup.Connection)
+                   .Options))
+            {
+                var found = context.UserPreferences.FirstOrDefault(p => p.UserID == userID);
+                if (found == null)
+                {
+                    CreateUserPreferences(userID);
+                    preferences = context.UserPreferences.FirstOrDefault(p => p.UserID == userID);
+                }
+                else
+                {
+                    preferences = new UserPreferences()
+                    {
+                        PreferenceID = found.PreferenceID,
+                        UserID = found.UserID,
+                        IsDarkTheme = found.IsDarkTheme,
+                        IsEnglishVersion = found.IsEnglishVersion
+                    };
+                }
+            }
+            return preferences;
         }
     }
 }

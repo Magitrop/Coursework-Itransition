@@ -1352,3 +1352,5 @@ C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0
 C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0\ref\RazorCoursework.dll
 C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0\RazorCoursework.pdb
 C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0\RazorCoursework.genruntimeconfig.cache
+C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\bin\Release\net5.0\MegaApiClient.dll
+C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\bin\Release\net5.0\Dropbox.Api.dll

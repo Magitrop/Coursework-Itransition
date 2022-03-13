@@ -1,6 +1,8 @@
 C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\RazorCoursework.exe
 C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\css\site.css
 C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\favicon.ico
+C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\files\23adbacd-e9bf-4e2c-ace0-a63ab9717d3a_Desk.png
+C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\files\fdce1664-bc43-4ee2-b910-5d5c32656b97_untitled.png
 C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\js\site.js
 C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
@@ -40,7 +42,9 @@ C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0
 C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\RazorCoursework.dll
 C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\RazorCoursework.runtimeconfig.json
 C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\RazorCoursework.pdb
+C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\Dropbox.Api.dll
 C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\Humanizer.dll
+C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\MegaApiClient.dll
 C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.Cryptography.Internal.dll
 C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
 C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore.dll

@@ -40,11 +40,15 @@
             </div>
         </nav>
     </header>
-    <div class="container col-8">
+    <div class="container col-10">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
+
+    <div id="user-data"
+         data-user-auth="@User.Identity.IsAuthenticated"
+         data-user-id="@User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value"></div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

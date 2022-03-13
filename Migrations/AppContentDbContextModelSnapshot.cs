@@ -109,6 +109,26 @@ namespace RazorCoursework.Migrations
                     b.ToTable("Tags");
                 });
 
+            modelBuilder.Entity("RazorCoursework.Data.UserPreferences", b =>
+                {
+                    b.Property<string>("PreferenceID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsDarkTheme")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsEnglishVersion")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PreferenceID");
+
+                    b.ToTable("UserPreferences");
+                });
+
             modelBuilder.Entity("RazorCoursework.Data.UserReviewAndTagRelation", b =>
                 {
                     b.Property<string>("RelationID")

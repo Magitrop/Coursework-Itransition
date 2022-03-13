@@ -12,7 +12,9 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using RazorCoursework.Data;
 
 namespace RazorCoursework.Areas.Identity.Pages.Account
 {
@@ -87,6 +89,7 @@ namespace RazorCoursework.Areas.Identity.Pages.Account
                         _logger.LogInformation("User created a new account with password.");
 
                         await _signInManager.SignInAsync(user, isPersistent: false);
+                        AppContentDbContext.CreateUserPreferences(user.Id);
                         return LocalRedirect(returnUrl);
                     }
                     foreach (var error in result.Errors)
