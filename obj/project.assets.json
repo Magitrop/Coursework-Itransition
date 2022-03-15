@@ -36,6 +36,18 @@
           "lib/netstandard2.0/MegaApiClient.dll": {}
         }
       },
+      "Microsoft.AspNetCore.Authentication.Google/5.0.15": {
+        "type": "package",
+        "compile": {
+          "lib/net5.0/Microsoft.AspNetCore.Authentication.Google.dll": {}
+        },
+        "runtime": {
+          "lib/net5.0/Microsoft.AspNetCore.Authentication.Google.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      },
       "Microsoft.AspNetCore.Cryptography.Internal/5.0.12": {
         "type": "package",
         "compile": {
@@ -2652,6 +2664,21 @@
         "lib/netstandard2.0/MegaApiClient.xml",
         "megaapiclient.1.10.2.nupkg.sha512",
         "megaapiclient.nuspec"
+      ]
+    },
+    "Microsoft.AspNetCore.Authentication.Google/5.0.15": {
+      "sha512": "xG4cMP4vNvNx9mY4q6xDDcLbhGiH3P3GEIx4RVPNBD1HTCVu+bvAST2Tx7sywAw8VzrewBR+hrRiVOBwxKC2pQ==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.authentication.google/5.0.15",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net5.0/Microsoft.AspNetCore.Authentication.Google.dll",
+        "lib/net5.0/Microsoft.AspNetCore.Authentication.Google.xml",
+        "microsoft.aspnetcore.authentication.google.5.0.15.nupkg.sha512",
+        "microsoft.aspnetcore.authentication.google.nuspec"
       ]
     },
     "Microsoft.AspNetCore.Cryptography.Internal/5.0.12": {
@@ -8554,6 +8581,7 @@
     "net5.0": [
       "Dropbox.Api >= 6.25.0",
       "MegaApiClient >= 1.10.2",
+      "Microsoft.AspNetCore.Authentication.Google >= 5.0.15",
       "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore >= 5.0.13",
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 5.0.12",
       "Microsoft.AspNetCore.Identity.UI >= 5.0.12",
@@ -8617,6 +8645,10 @@
           "MegaApiClient": {
             "target": "Package",
             "version": "[1.10.2, )"
+          },
+          "Microsoft.AspNetCore.Authentication.Google": {
+            "target": "Package",
+            "version": "[5.0.15, )"
           },
           "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": {
             "target": "Package",

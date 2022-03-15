@@ -22,7 +22,6 @@ namespace RazorCoursework.Pages
     public class CreateUserReviewModel : PageModel
     {
         private readonly IWebHostEnvironment _appEnvironment;
-
         public CreateUserReviewModel(IWebHostEnvironment appEnvironment)
         {
             _appEnvironment = appEnvironment;
@@ -151,44 +150,6 @@ namespace RazorCoursework.Pages
 
             return pictureLinks;
         }
-
-        /*private string GetPictureLinks()
-        {
-            if (Request.Form.Files == null || Request.Form.Files.Count == 0)
-                return string.Empty;
-
-            var tempDirectory = _appEnvironment.WebRootPath + "/files/";
-            if (!Directory.Exists(tempDirectory))
-                Directory.CreateDirectory(tempDirectory);
-
-            MegaApiClient client = new MegaApiClient();
-            client.Login("magitrop11@list.ru", "CsF.8h77kEVwD.N");
-
-            IEnumerable<INode> nodes = client.GetNodes();
-            INode root = nodes.Single(x => x.Type == NodeType.Root);
-
-            string pictureLinks = string.Empty;
-            foreach (var file in Request.Form.Files)
-            {
-                string filepath = string.Empty;
-                if (file.Length > 0)
-                {
-                    using (var stream = new FileStream(
-                        tempDirectory + Guid.NewGuid() + "_" + file.FileName, FileMode.CreateNew))
-                    {
-                        file.CopyTo(stream);
-                        filepath = stream.Name;
-                    }
-                }
-                INode myFile = client.UploadFile(filepath, root);
-                Uri downloadLink = client.GetDownloadLink(myFile);
-                pictureLinks += downloadLink.AbsoluteUri + ";";
-                System.IO.File.Delete(filepath);
-            }
-            client.Logout();
-
-            return pictureLinks;
-        }*/
     }
 }
 

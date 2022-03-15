@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "8Fh0xyE0bwJG9Fpe9S8LqJpapzr0d/4/TRCuQAGtDw8ThHWWRbhXP6KKqoMznh2wzbkxKO13elNj1UW0Zf+VTw==",
+  "dgSpecHash": "G7+wdaKCdB3SlE/a2Gqq2ViXbaLI9wK61q0XDNgU9TlInOPdFntCPAcqUJnLpz9coTpX4rMRJ4+eCzWejq5i/g==",
   "success": true,
   "projectFilePath": "C:\\Users\\xiaom\\Desktop\\Max\\Itransition\\Coursework-Itransition\\RazorCoursework.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\xiaom\\.nuget\\packages\\dropbox.api\\6.25.0\\dropbox.api.6.25.0.nupkg.sha512",
     "C:\\Users\\xiaom\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\xiaom\\.nuget\\packages\\megaapiclient\\1.10.2\\megaapiclient.1.10.2.nupkg.sha512",
+    "C:\\Users\\xiaom\\.nuget\\packages\\microsoft.aspnetcore.authentication.google\\5.0.15\\microsoft.aspnetcore.authentication.google.5.0.15.nupkg.sha512",
     "C:\\Users\\xiaom\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\5.0.12\\microsoft.aspnetcore.cryptography.internal.5.0.12.nupkg.sha512",
     "C:\\Users\\xiaom\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\5.0.12\\microsoft.aspnetcore.cryptography.keyderivation.5.0.12.nupkg.sha512",
     "C:\\Users\\xiaom\\.nuget\\packages\\microsoft.aspnetcore.diagnostics.entityframeworkcore\\5.0.13\\microsoft.aspnetcore.diagnostics.entityframeworkcore.5.0.13.nupkg.sha512",

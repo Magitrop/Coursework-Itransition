@@ -5,7 +5,7 @@
 
 <h2>Изменить обзор </h2>
 
-<form id="review" method="post">
+<form id="review" method="post" enctype="multipart/form-data">
     <input type="hidden" name="CurrentReviewId" value="@Model.CurrentReviewId" />
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
@@ -38,6 +38,37 @@
                value="@Model.ReviewTags" />
         <span asp-validation-for="Input.Tags" class="text-danger"></span>
     </div>
+    <div class="form-group" id="group-files">
+        <input type="hidden"
+               id="uploaded-files-count"
+               name="FilesCount"
+               value="@Model.ReviewPictureLinks.Count" />
+        <label>Прикрепить изображения</label>
+        @foreach (var file in Model.ReviewPictureLinks)
+        {
+            <input type="hidden"
+                   id="File-@file.index"
+                   name="File-@file.index"
+                   value="@file.link" />
+            <div id="uploaded-file-@file.index" style="position: relative">
+                <img src="@file.link" style="width: 100%" />
+                <button id="remove-image-@file.index"
+                        type="button"
+                        class="btn btn-light btn-outline-dark"
+                        style="position: absolute; top: 10px; right: 10px"
+                        onclick="
+                            $('#File-@file.index').remove();
+                            $(this).parent().remove();">
+                    &#10005;
+                </button>
+            </div>
+        }
+        <input id="File-@(Model.ReviewPictureLinks.Count + 1)"
+               name="File-@(Model.ReviewPictureLinks.Count + 1)"
+               type="file"
+               class="form-control-file"
+               accept="image/*" />
+    </div>
     <button type="submit" class="btn btn-primary">Применить изменения</button>
     <a class="btn btn-danger"
        asp-area=""
@@ -47,3 +78,50 @@
         Отменить изменения
     </a>
 </form>
+
+@section scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        var filesCount = $('#uploaded-files-count').val();
+
+        $('#group-files').on('change', 'input[type=file]', function () {
+            filesCount++;
+            $(this)
+                .parent()
+                .append('<div id="uploaded-file-' + filesCount + '"><img /></div>')
+                .children('#uploaded-file-' + filesCount)
+                .css({
+                    'position': 'relative'
+                })
+                .append('<button id="remove-image-' + filesCount + '" type="button">&#10005;</button>')
+                .children('button')
+                .addClass('btn btn-light btn-outline-dark')
+                .data('file-index', filesCount)
+                .css({
+                    'position': 'absolute',
+                    'top': '10px',
+                    'right': '10px',
+                })
+                .on("click", function (e) {
+                    $('#File-' + $(this).data('file-index')).remove();
+                    $(this).parent().remove();
+                });
+
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#uploaded-file-' + filesCount + ' img')
+                    .attr("src", e.target.result)
+                    .css('width', '100%');
+            }
+            reader.readAsDataURL($(this)[0].files[0]);
+            $(this).css('display', 'none');
+
+            $(this).parent().append(
+                '<input name="File-' + (filesCount + 1) +
+                '" id="File-' + (filesCount + 1) +
+                '" type="file" class="form-control-file" accept="image/*" />');
+        })
+    </script>
+}

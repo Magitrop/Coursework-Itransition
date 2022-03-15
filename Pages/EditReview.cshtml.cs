@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Dropbox.Api;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +18,18 @@ namespace RazorCoursework.Pages
     [Authorize]
     public class EditReviewModel : PageModel
     {
+        private readonly IWebHostEnvironment _appEnvironment;
+        public EditReviewModel(IWebHostEnvironment appEnvironment)
+        {
+            _appEnvironment = appEnvironment;
+        }
+
         public string CurrentReviewId { get; set; }
         public string ReviewSubjectName { get; set; }
         public string ReviewSubjectGenre { get; set; }
         public string ReviewText { get; set; }
         public string ReviewTags { get; set; }
+        public List<(int index, string link)> ReviewPictureLinks { get; set; } = new List<(int index, string link)>();
 
         [BindProperty] public InputModel Input { get; set; }
 
@@ -61,16 +71,22 @@ namespace RazorCoursework.Pages
                     ReviewSubjectGenre = currentReview.ReviewSubjectGenre;
                     ReviewText = currentReview.ReviewText;
                     ReviewTags = string.Join(' ', currentReview.TagRelations.Select(r => r.Tag.TagName));
+
+                    int index = 0;
+                    foreach (var link in currentReview.AttachedPictureLinks.Split(';').Where(p => p.Length > 0))
+                        ReviewPictureLinks.Add((++index, link));
                 }
             }
 
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPost()
         {
             if (ModelState.IsValid)
             {
+                var pictureLinks = await GetPictureLinks();
+
                 using (var context = new AppContentDbContext(
                    new DbContextOptionsBuilder<AppContentDbContext>()
                    .UseSqlServer(Startup.Connection)
@@ -91,6 +107,7 @@ namespace RazorCoursework.Pages
                         ReviewSubjectGenre = Input.ReviewSubjectGenre,
                         ReviewSubjectName = Input.ReviewSubjectName,
                         CreationDate = currentReview.CreationDate,
+                        AttachedPictureLinks = pictureLinks,
                         TagRelations = new List<UserReviewAndTagRelation>()
                     };
                     context.Reviews.Add(newReview);
@@ -129,6 +146,53 @@ namespace RazorCoursework.Pages
             }
 
             return RedirectToPage("/Home", new { user = User.Identity.Name, p = 1 });
+        }
+
+        private async Task<string> GetPictureLinks()
+        {
+            string pictureLinks = string.Empty;
+            int filesCount;
+            if (int.TryParse(Request.Form["FilesCount"], out filesCount))
+                for (int i = 1; i <= filesCount; i++)
+                    if (Request.Form.ContainsKey("File-" + i))
+                        pictureLinks += Request.Form["File-" + i] + ";";
+
+            if (Request.Form.Files == null || Request.Form.Files.Count == 0)
+                return pictureLinks;
+
+            var tempDirectory = _appEnvironment.WebRootPath + "/files/";
+            if (!Directory.Exists(tempDirectory))
+                Directory.CreateDirectory(tempDirectory);
+
+            using (var dbx = new DropboxClient("yvwtJ6G2tG0AAAAAAAAAAdQTdoQZAz8BXbFqFTSxCWF31KZNiRGYuqHThF_uAYLA"))
+            {
+                foreach (var file in Request.Form.Files)
+                {
+                    string filepath = string.Empty;
+                    if (file.Length > 0)
+                    {
+                        using (var stream = new FileStream(
+                            tempDirectory + Guid.NewGuid() + "_" + file.FileName, FileMode.CreateNew))
+                        {
+                            file.CopyTo(stream);
+                            filepath = stream.Name;
+                        }
+                    }
+                    using (var fileStream = System.IO.File.Open(filepath, FileMode.Open))
+                    {
+                        //if (fileStream.Length <= 4096 * 1024)
+                        {
+                            var uploaded = await dbx.Files.UploadAsync(
+                                "/" + Guid.NewGuid() + "_" + file.FileName,
+                                body: fileStream);
+                            pictureLinks += (await dbx.Files.GetTemporaryLinkAsync(uploaded.PathLower)).Link + ";";
+                        }
+                    }
+                    System.IO.File.Delete(filepath);
+                }
+            }
+
+            return pictureLinks;
         }
     }
 }

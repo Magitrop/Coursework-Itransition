@@ -35,6 +35,7 @@
         "dependencies": {
           "Dropbox.Api": "6.25.0",
           "MegaApiClient": "1.10.2",
+          "Microsoft.AspNetCore.Authentication.Google": "5.0.15",
           "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": "5.0.13",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "5.0.12",
           "Microsoft.AspNetCore.Identity.UI": "5.0.12",
@@ -361,6 +362,17 @@
         },
         "compile": {
           "lib/netstandard2.0/MegaApiClient.dll": {}
+        }
+      },
+      "Microsoft.AspNetCore.Authentication.Google/5.0.15": {
+        "runtime": {
+          "lib/net5.0/Microsoft.AspNetCore.Authentication.Google.dll": {
+            "assemblyVersion": "5.0.15.0",
+            "fileVersion": "5.0.1522.11616"
+          }
+        },
+        "compile": {
+          "lib/net5.0/Microsoft.AspNetCore.Authentication.Google.dll": {}
         }
       },
       "Microsoft.AspNetCore.Cryptography.Internal/5.0.12": {
@@ -3854,6 +3866,13 @@
       "sha512": "sha512-7oahdgGsnZ3qOJ6PBZxUyLLnAf4/Rp0QNbhRrCwC6CD+QMpXIyIrZ2sVHeAM5NQA5uBihFmE+MdHgBFbhWqFSw==",
       "path": "megaapiclient/1.10.2",
       "hashPath": "megaapiclient.1.10.2.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Authentication.Google/5.0.15": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-xG4cMP4vNvNx9mY4q6xDDcLbhGiH3P3GEIx4RVPNBD1HTCVu+bvAST2Tx7sywAw8VzrewBR+hrRiVOBwxKC2pQ==",
+      "path": "microsoft.aspnetcore.authentication.google/5.0.15",
+      "hashPath": "microsoft.aspnetcore.authentication.google.5.0.15.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Cryptography.Internal/5.0.12": {
       "type": "package",
