@@ -17,7 +17,7 @@ namespace RazorCoursework.Pages
     {
         public List<Review> reviews { get; set; }
         public string userName { get; set; }
-        public int reviewsPerPage { get; set; } = 4;
+        public int reviewsPerPage { get; set; } = 10;
         public string currentTag { get; set; }
         public int currentPage { get; set; }
         public int pagesCount { get; set; }

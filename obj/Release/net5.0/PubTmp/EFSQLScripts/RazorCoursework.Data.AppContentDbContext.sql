@@ -184,3 +184,16 @@ GO
 COMMIT;
 GO
 
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220316221558_DbTablesBackup')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20220316221558_DbTablesBackup', N'5.0.13');
+END;
+GO
+
+COMMIT;
+GO
+

@@ -1355,3 +1355,12 @@ C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\obj\Release\net5.0
 C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\bin\Release\net5.0\MegaApiClient.dll
 C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\bin\Release\net5.0\Dropbox.Api.dll
 C:\Users\xiaom\Desktop\Max\Itransition\Coursework-Itransition\bin\Release\net5.0\Microsoft.AspNetCore.Authentication.Google.dll
+E:\C# Projects\Coursework-Itransition\bin\Release\net5.0\Dropbox.Api.dll
+E:\C# Projects\Coursework-Itransition\bin\Release\net5.0\MegaApiClient.dll
+E:\C# Projects\Coursework-Itransition\bin\Release\net5.0\Microsoft.AspNetCore.Authentication.Google.dll
+E:\C# Projects\Coursework-Itransition\obj\Release\net5.0\Razor\Pages\ReviewComments.cshtml.g.cs
+E:\C# Projects\Coursework-Itransition\bin\Release\net5.0\Azure.Core.dll
+E:\C# Projects\Coursework-Itransition\bin\Release\net5.0\Azure.Extensions.AspNetCore.Configuration.Secrets.dll
+E:\C# Projects\Coursework-Itransition\bin\Release\net5.0\Azure.Identity.dll
+E:\C# Projects\Coursework-Itransition\bin\Release\net5.0\Azure.Security.KeyVault.Secrets.dll
+E:\C# Projects\Coursework-Itransition\bin\Release\net5.0\Microsoft.Identity.Client.Extensions.Msal.dll

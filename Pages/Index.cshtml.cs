@@ -19,26 +19,50 @@ namespace RazorCoursework.Pages
             _logger = logger;
         }
 
-        public List<Review> reviews { get; set; }
-        public int recentReviewsCount { get; set; } = 4;
+        public List<Review> recentReviews { get; set; } = new List<Review>();
+        public List<(Review review, int likesCount)> topRatedReviews { get; set; } = new List<(Review, int)>();
+        public int showReviewsCount { get; set; } = 5;
 
         public void OnGet()
         {
-            LoadReviews();
+            LoadRecentReviews();
+            LoadTopRatedReviews();
         }
 
-        private void LoadReviews()
+        private void LoadRecentReviews()
         {
             using (var context = new AppContentDbContext(
                    new DbContextOptionsBuilder<AppContentDbContext>()
                    .UseSqlServer(Startup.Connection)
                    .Options))
             {
-                reviews = (from t in context.Reviews.Include(r => r.TagRelations).ThenInclude(r => r.Tag)
-                           orderby t.CreationDate descending
-                           select t)
-                           .Take(recentReviewsCount)
+                recentReviews = (from review in context.Reviews.Include(r => r.TagRelations).ThenInclude(r => r.Tag)
+                           orderby review.CreationDate descending
+                           select review)
+                           .Take(showReviewsCount)
                            .ToList();
+            }
+        }
+
+        private void LoadTopRatedReviews()
+        {
+            using (var context = new AppContentDbContext(
+                   new DbContextOptionsBuilder<AppContentDbContext>()
+                   .UseSqlServer(Startup.Connection)
+                   .Options))
+            {
+                var group = 
+                        (from like in context.ReviewLikes
+                        group like by like.ReviewID into g
+                        orderby g.Count() descending
+                        select new { ID = g.Key, Count = g.Count() })
+                        .Take(showReviewsCount);
+                foreach (var g in group)
+                    topRatedReviews.Add(
+                        (context.Reviews
+                        .Include(r => r.TagRelations)
+                        .ThenInclude(t => t.Tag)
+                        .FirstOrDefault(r => r.ReviewID == g.ID), g.Count));
             }
         }
 

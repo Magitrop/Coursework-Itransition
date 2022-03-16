@@ -1,27 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\xiaom\\Desktop\\Max\\Itransition\\Coursework-Itransition\\RazorCoursework.csproj": {}
+    "E:\\C# Projects\\Coursework-Itransition\\RazorCoursework.csproj": {}
   },
   "projects": {
-    "C:\\Users\\xiaom\\Desktop\\Max\\Itransition\\Coursework-Itransition\\RazorCoursework.csproj": {
+    "E:\\C# Projects\\Coursework-Itransition\\RazorCoursework.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\xiaom\\Desktop\\Max\\Itransition\\Coursework-Itransition\\RazorCoursework.csproj",
+        "projectUniqueName": "E:\\C# Projects\\Coursework-Itransition\\RazorCoursework.csproj",
         "projectName": "RazorCoursework",
-        "projectPath": "C:\\Users\\xiaom\\Desktop\\Max\\Itransition\\Coursework-Itransition\\RazorCoursework.csproj",
-        "packagesPath": "C:\\Users\\xiaom\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\xiaom\\Desktop\\Max\\Itransition\\Coursework-Itransition\\obj\\",
+        "projectPath": "E:\\C# Projects\\Coursework-Itransition\\RazorCoursework.csproj",
+        "packagesPath": "C:\\Users\\magit\\.nuget\\packages\\",
+        "outputPath": "E:\\C# Projects\\Coursework-Itransition\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
+          "E:\\Visual Studio 2019\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\xiaom\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\magit\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
@@ -46,6 +44,14 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
+            "Azure.Extensions.AspNetCore.Configuration.Secrets": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
+            "Azure.Identity": {
+              "target": "Package",
+              "version": "[1.2.2, )"
+            },
             "Dropbox.Api": {
               "target": "Package",
               "version": "[6.25.0, )"
@@ -107,7 +113,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.404\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.405\\RuntimeIdentifierGraph.json"
         }
       }
     }

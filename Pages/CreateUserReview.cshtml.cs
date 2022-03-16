@@ -50,6 +50,23 @@ namespace RazorCoursework.Pages
             public string Tags { get; set; }
         }
 
+        public async Task<IActionResult> OnPostTags()
+        {
+            string[] result = new string[0];
+            using (var context = new AppContentDbContext(
+                   new DbContextOptionsBuilder<AppContentDbContext>()
+                   .UseSqlServer(Startup.Connection)
+                   .Options))
+            {
+                result = await (from t in context.Tags
+                         where t.TagName.StartsWith(Request.Form["term"])
+                         select t.TagName)
+                         .Take(10)
+                         .ToArrayAsync();
+            }
+            return new JsonResult(new { suggestions = result });
+        }
+
         public async Task<IActionResult> OnPost()
         {
             if (ModelState.IsValid)

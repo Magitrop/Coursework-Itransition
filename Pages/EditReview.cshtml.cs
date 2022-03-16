@@ -47,7 +47,7 @@ namespace RazorCoursework.Pages
             [Display(Name = "Текст обзора")]
             public string ReviewText { get; set; }
 
-            [Display(Name = "Теги (указываются через пробелы)")]
+            [Display(Name = "Теги (указываются через запятую)")]
             public string Tags { get; set; }
         }
 
@@ -70,7 +70,7 @@ namespace RazorCoursework.Pages
                     ReviewSubjectName = currentReview.ReviewSubjectName;
                     ReviewSubjectGenre = currentReview.ReviewSubjectGenre;
                     ReviewText = currentReview.ReviewText;
-                    ReviewTags = string.Join(' ', currentReview.TagRelations.Select(r => r.Tag.TagName));
+                    ReviewTags = string.Join(',', currentReview.TagRelations.Select(r => r.Tag.TagName));
 
                     int index = 0;
                     foreach (var link in currentReview.AttachedPictureLinks.Split(';').Where(p => p.Length > 0))
@@ -171,24 +171,26 @@ namespace RazorCoursework.Pages
                     string filepath = string.Empty;
                     if (file.Length > 0)
                     {
-                        using (var stream = new FileStream(
-                            tempDirectory + Guid.NewGuid() + "_" + file.FileName, FileMode.CreateNew))
+                        if (file.Length <= 4096 * 1024)
                         {
-                            file.CopyTo(stream);
-                            filepath = stream.Name;
+                            using (var stream = new FileStream(
+                                tempDirectory + Guid.NewGuid() + "_" + file.FileName, FileMode.CreateNew))
+                            {
+                                file.CopyTo(stream);
+                                filepath = stream.Name;
+                            }
+                            using (var fileStream = System.IO.File.Open(filepath, FileMode.Open))
+                            {
+                                var uploaded = await dbx.Files.UploadAsync(
+                                    "/" + Guid.NewGuid() + "_" + file.FileName,
+                                    body: fileStream);
+                                pictureLinks += (await dbx.Files.GetTemporaryLinkAsync(uploaded.PathLower)).Link + ";";
+                            }
+                            System.IO.File.Delete(filepath);
                         }
+                        else
+                            ModelState.AddModelError(string.Empty, "Вес загружаемого изображения не должен превышать 4 МБ.");
                     }
-                    using (var fileStream = System.IO.File.Open(filepath, FileMode.Open))
-                    {
-                        //if (fileStream.Length <= 4096 * 1024)
-                        {
-                            var uploaded = await dbx.Files.UploadAsync(
-                                "/" + Guid.NewGuid() + "_" + file.FileName,
-                                body: fileStream);
-                            pictureLinks += (await dbx.Files.GetTemporaryLinkAsync(uploaded.PathLower)).Link + ";";
-                        }
-                    }
-                    System.IO.File.Delete(filepath);
                 }
             }
 

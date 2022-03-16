@@ -14,7 +14,7 @@ namespace RazorCoursework.Pages
     public class SearchReviewsModel : PageModel
     {
         public List<Review> reviews { get; set; }
-        public int reviewsPerPage { get; set; } = 4;
+        public int reviewsPerPage { get; set; } = 10;
         public string currentTag { get; set; }
         public int currentPage { get; set; }
         public int pagesCount { get; set; }
