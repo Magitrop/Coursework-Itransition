@@ -6,20 +6,20 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAzFt7jQ5Fd0aFrGebH9BOrgAAAAACAAAAAAAQZgAAAAEAACAAAAD8WW3dgq8AFf7INk/guXexxtWm8ZFuW/wbSivHZPE9dAAAAAAOgAAAAAIAACAAAABcUCx+Q+MbXvzwCYHKLkxIDYmr6mQu/ckcptBeRkVt64AAAAABxIj676ZctPHiHYH0f9Xz1zc2NIGwo8K5UMZX+ff/hkYfIOZV1EQB3VCmoe+MLP5HqfTgC3M93OOdwdnRp5t2oqMpajqdE0HeZEmQEllG+2YKm3jhnXFB6joI0+ISxYxal9Q2rFBDaTgI+jC+zCd9D5m0+3XYj9k3KKyxPSvJNEAAAABUWJdhXiW2dcLxCD5Mg5rZSWUaPs1CmFfvnxOFWZYXEmGILpd+IwdSgVWuLxfynWYevDgYTTmrmPMEutGFSEwD</EncryptedPassword>
-    <History>False|2022-03-16T22:33:31.6715056Z;False|2022-03-17T01:31:23.7640118+03:00;</History>
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAzFt7jQ5Fd0aFrGebH9BOrgAAAAACAAAAAAAQZgAAAAEAACAAAAAxsryuDYOgAdMhxN+66kvjGYbk6MbLqAkwe/mlrxKuqwAAAAAOgAAAAAIAACAAAADcgVmNwi1IBsTJ/NfHrBEm2AM2+RF5eJ6it+zzi+4+1oAAAABgiIsaSpoxMJvnsN+2E388NR2DEgxH1LP2xPySjwDB/5GAeS6N/hPUfQ6remZavHBm8+tCSNl3BZZZvMU7ZplKcU08jgp1VGwHB8c9lsUGz66yQjmFeULcF6lhmShe+jQtX8LLmrYvubtf2TXMyBTDwJQGCgbGVLfcWS3XOF4R90AAAAAHWjJWNMbfz8DDvGR/wDwa8Ek20k4i+IXNerxMwFGvv3FcYU7zebDzP2lXEsh42GA6rhB3DUFyr8k67H1R8CB3</EncryptedPassword>
+    <History>True|2022-03-17T00:22:39.6872686Z;True|2022-03-17T03:18:37.9482608+03:00;True|2022-03-17T03:00:54.7977101+03:00;True|2022-03-17T02:50:31.3430474+03:00;True|2022-03-17T02:37:24.2631916+03:00;True|2022-03-17T02:33:48.5156845+03:00;True|2022-03-17T02:32:36.4557514+03:00;True|2022-03-17T02:31:34.1457431+03:00;True|2022-03-17T02:30:40.8117464+03:00;True|2022-03-17T02:29:38.9845706+03:00;True|2022-03-17T02:28:34.7038302+03:00;True|2022-03-17T02:27:15.3925050+03:00;True|2022-03-17T02:25:50.4530206+03:00;True|2022-03-17T02:22:57.5366258+03:00;True|2022-03-17T02:21:07.9176626+03:00;True|2022-03-17T02:20:01.1324627+03:00;True|2022-03-17T02:18:55.8798566+03:00;True|2022-03-17T02:17:24.8390594+03:00;True|2022-03-17T02:10:44.7638423+03:00;True|2022-03-17T02:08:54.8466935+03:00;True|2022-03-17T02:06:13.9027102+03:00;True|2022-03-17T02:04:16.8133238+03:00;True|2022-03-17T02:00:57.1742609+03:00;True|2022-03-17T01:58:50.0452590+03:00;True|2022-03-17T01:55:31.3112476+03:00;</History>
   </PropertyGroup>
   <ItemGroup>
     <DestinationConnectionStrings Include="DefaultConnection">
-      <Value>Server=tcp:courseworkdbserver.database.windows.net,1433%3bInitial Catalog=Coursework_db%3bPersist Security Info=False%3bUser ID=Magitrop%3bPassword=12qw12qW%3bMultipleActiveResultSets=False%3bEncrypt=True%3bTrustServerCertificate=False%3bConnection Timeout=30%3b</Value>
+      <Value>Server=tcp:courseworkdbserver.database.windows.net,1433%3bInitial Catalog=RazorCoursework_db%3bPersist Security Info=False%3bUser ID=Magitrop%3bPassword=12qw12qW%3bMultipleActiveResultSets=False%3bEncrypt=True%3bTrustServerCertificate=False%3bConnection Timeout=30%3b</Value>
     </DestinationConnectionStrings>
   </ItemGroup>
   <ItemGroup>
     <EFMigrations Include="RazorCoursework.Data.AppContentDbContext">
-      <Value>Server=tcp:courseworkdbserver.database.windows.net,1433%3bInitial Catalog=Coursework_db%3bPersist Security Info=False%3bUser ID=Magitrop%3bPassword=12qw12qW%3bMultipleActiveResultSets=False%3bEncrypt=True%3bTrustServerCertificate=False%3bConnection Timeout=30%3b</Value>
+      <Value>Server=tcp:courseworkdbserver.database.windows.net,1433%3bInitial Catalog=RazorCoursework_db%3bPersist Security Info=False%3bUser ID=Magitrop%3bPassword=12qw12qW%3bMultipleActiveResultSets=False%3bEncrypt=True%3bTrustServerCertificate=False%3bConnection Timeout=30%3b</Value>
     </EFMigrations>
     <EFMigrations Include="RazorCoursework.Data.ApplicationDbContext">
-      <Value>Server=tcp:courseworkdbserver.database.windows.net,1433%3bInitial Catalog=Coursework_db%3bPersist Security Info=False%3bUser ID=Magitrop%3bPassword=12qw12qW%3bMultipleActiveResultSets=False%3bEncrypt=True%3bTrustServerCertificate=False%3bConnection Timeout=30%3b</Value>
+      <Value>Server=tcp:courseworkdbserver.database.windows.net,1433%3bInitial Catalog=RazorCoursework_db%3bPersist Security Info=False%3bUser ID=Magitrop%3bPassword=12qw12qW%3bMultipleActiveResultSets=False%3bEncrypt=True%3bTrustServerCertificate=False%3bConnection Timeout=30%3b</Value>
     </EFMigrations>
   </ItemGroup>
 </Project>

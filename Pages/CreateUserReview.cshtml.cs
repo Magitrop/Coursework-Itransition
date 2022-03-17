@@ -91,33 +91,36 @@ namespace RazorCoursework.Pages
                     };
                     context.Reviews.Add(newReview);
 
-                    foreach (var t in from t in Input.Tags.Split(',')
-                                        where t.Length > 0
-                                        select t.Trim())
+                    if (Input.Tags?.Length > 0)
                     {
-                        var tag = Regex.Replace(t, @"[ ]{2,}", " ");
-
-                        Tag newTag = context.Tags
-                            .Include(t => t.ReviewRelations)
-                            .FirstOrDefault(_t => _t.TagName == tag);
-                        if (newTag == null)
+                        foreach (var t in from t in Input.Tags.Split(',')
+                                          where t.Length > 0
+                                          select t.Trim())
                         {
-                            newTag = new Tag()
+                            var tag = Regex.Replace(t, @"[ ]{2,}", " ");
+
+                            Tag newTag = context.Tags
+                                .Include(t => t.ReviewRelations)
+                                .FirstOrDefault(_t => _t.TagName == tag);
+                            if (newTag == null)
                             {
-                                TagName = tag,
-                                ReviewRelations = new List<UserReviewAndTagRelation>()
-                            };
-                            context.Tags.Add(newTag);
-                        }
+                                newTag = new Tag()
+                                {
+                                    TagName = tag,
+                                    ReviewRelations = new List<UserReviewAndTagRelation>()
+                                };
+                                context.Tags.Add(newTag);
+                            }
 
-                        var rel = new UserReviewAndTagRelation()
-                        {
-                            Tag = newTag,
-                            Review = newReview
-                        };
-                        newTag.ReviewRelations.Add(rel);
-                        newReview.TagRelations.Add(rel);
-                        context.ReviewAndTagRelations.Add(rel);
+                            var rel = new UserReviewAndTagRelation()
+                            {
+                                Tag = newTag,
+                                Review = newReview
+                            };
+                            newTag.ReviewRelations.Add(rel);
+                            newReview.TagRelations.Add(rel);
+                            context.ReviewAndTagRelations.Add(rel);
+                        }
                     }
 
                     context.SaveChanges();

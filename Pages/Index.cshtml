@@ -108,27 +108,27 @@
         @foreach (var r in Model.topRatedReviews)
         {
             <tr class="border border-dark review-row text-center"
-                onclick="location.href='@(Url.Page("ReviewComments", new { id = r.review.ReviewID }))'">
+                onclick="location.href='@(Url.Page("ReviewComments", new { id = r.ReviewID }))'">
                 <td class="border border-dark">
                     <a class="btn btn-light btn-outline-dark"
                        asp-page="/Home"
-                       asp-route-user="@r.review.ReviewCreatorName"
+                       asp-route-user="@r.ReviewCreatorName"
                        asp-route-p="1">
-                        @r.review.ReviewCreatorName (@Model.GetCreatorLikesCount(r.review.ReviewCreatorID)
+                        @r.ReviewCreatorName (@Model.GetCreatorLikesCount(r.ReviewCreatorID)
                         <img src="https://img.icons8.com/material/24/000000/like--v1.png"
                              width="15" height="15" />)
                     </a>
                 </td>
                 <td class="border border-dark">
-                    @r.review.ReviewSubjectName (@r.likesCount
+                    @r.ReviewSubjectName @*(@r.likesCount
                     <img src="https://img.icons8.com/material/24/000000/like--v1.png"
-                         width="15" height="15" />)
+                         width="15" height="15" />)*@
                 </td>
                 <td class="border border-dark">
-                    @r.review.ReviewSubjectGenre
+                    @r.ReviewSubjectGenre
                 </td>
                 <td class="border border-dark">
-                    @foreach (var t in r.review.TagRelations)
+                    @foreach (var t in r.TagRelations)
                     {
                         <a class="btn btn-light btn-outline-dark"
                            asp-page="SearchReviews"

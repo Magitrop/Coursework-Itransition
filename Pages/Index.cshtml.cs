@@ -20,7 +20,7 @@ namespace RazorCoursework.Pages
         }
 
         public List<Review> recentReviews { get; set; } = new List<Review>();
-        public List<(Review review, int likesCount)> topRatedReviews { get; set; } = new List<(Review, int)>();
+        public List<Review> topRatedReviews { get; set; } = new List<Review>();
         public int showReviewsCount { get; set; } = 5;
 
         public void OnGet()
@@ -51,18 +51,16 @@ namespace RazorCoursework.Pages
                    .UseSqlServer(Startup.Connection)
                    .Options))
             {
-                var group = 
+                var groups =
                         (from like in context.ReviewLikes
-                        group like by like.ReviewID into g
-                        orderby g.Count() descending
-                        select new { ID = g.Key, Count = g.Count() })
+                         group like by like.ReviewID into g
+                         orderby g.Count() descending
+                         select g.Key)
                         .Take(showReviewsCount);
-                foreach (var g in group)
-                    topRatedReviews.Add(
-                        (context.Reviews
-                        .Include(r => r.TagRelations)
-                        .ThenInclude(t => t.Tag)
-                        .FirstOrDefault(r => r.ReviewID == g.ID), g.Count));
+                topRatedReviews = context.Reviews
+                    .Include(r => r.TagRelations)
+                    .ThenInclude(t => t.Tag)
+                    .Where(r => groups.Any(g => g == r.ReviewID)).ToList();
             }
         }
 
