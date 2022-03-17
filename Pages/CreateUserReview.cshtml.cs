@@ -140,7 +140,7 @@ namespace RazorCoursework.Pages
                 Directory.CreateDirectory(tempDirectory);
 
             string pictureLinks = string.Empty;
-            using (var dbx = new DropboxClient("yvwtJ6G2tG0AAAAAAAAAAdQTdoQZAz8BXbFqFTSxCWF31KZNiRGYuqHThF_uAYLA"))
+            using (var dbx = new DropboxClient("sl.BD-rvojmRetHizU_K9JtztYfcE-WInTNgZmaq3n1JNPU6Vo0_Erg4YmxX4bqdOPSHa2Q91ErOm0fb_RaDI1LOPAT7AiPOzf_fpgYMs2HrHJ-5gQdfNEqFpIELnRketeaeeloXKwOQOcP"))
             {
                 foreach (var file in Request.Form.Files)
                 {
@@ -161,7 +161,10 @@ namespace RazorCoursework.Pages
                             var uploaded = await dbx.Files.UploadAsync(
                                 "/" + Guid.NewGuid() + "_" + file.FileName,
                                 body: fileStream);
-                            pictureLinks += (await dbx.Files.GetTemporaryLinkAsync(uploaded.PathLower)).Link + ";";
+                            pictureLinks += 
+                                (await dbx.Sharing.CreateSharedLinkWithSettingsAsync(uploaded.PathLower))
+                                .Url.Replace("dl=0", "raw=1") + ";";
+                            //pictureLinks += (await dbx.Files.GetTemporaryLinkAsync(uploaded.PathLower)).Link + ";";
                         }
                     }
                     System.IO.File.Delete(filepath);

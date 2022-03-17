@@ -8905,23 +8905,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\magit\\.nuget\\packages\\": {},
-    "E:\\Visual Studio 2019\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Schweppes_psina\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\C# Projects\\Coursework-Itransition\\RazorCoursework.csproj",
+      "projectUniqueName": "C:\\Users\\Schweppes_psina\\Desktop\\C# Projects\\Coursework-Itransition\\RazorCoursework.csproj",
       "projectName": "RazorCoursework",
-      "projectPath": "E:\\C# Projects\\Coursework-Itransition\\RazorCoursework.csproj",
-      "packagesPath": "C:\\Users\\magit\\.nuget\\packages\\",
-      "outputPath": "E:\\C# Projects\\Coursework-Itransition\\obj\\",
+      "projectPath": "C:\\Users\\Schweppes_psina\\Desktop\\C# Projects\\Coursework-Itransition\\RazorCoursework.csproj",
+      "packagesPath": "C:\\Users\\Schweppes_psina\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Schweppes_psina\\Desktop\\C# Projects\\Coursework-Itransition\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "E:\\Visual Studio 2019\\Shared\\NuGetPackages"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\magit\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Schweppes_psina\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -9017,7 +9017,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.405\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
       }
     }
   }
