@@ -75,9 +75,9 @@ namespace RazorCoursework.Pages
                    .UseSqlServer(Startup.Connection)
                    .Options))
             {
-                string currentuserID = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
                 result = context.ReviewLikes.Any(like =>
-                    like.UserID == currentuserID &&
+                    like.UserID == currentUserID &&
                     like.ReviewID == reviewID);
             }
             return result;
@@ -110,28 +110,57 @@ namespace RazorCoursework.Pages
             return result;
         }
 
-        public async Task<IActionResult> OnPostUserPreferences()
+        public IActionResult OnPostUserPreferences()
         {
-            MemoryStream stream = new MemoryStream();
-            await Request.Body.CopyToAsync(stream);
-            stream.Position = 0;
             UserPreferences preferences;
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                var data = (await reader.ReadToEndAsync()).Split(';');
-                bool isAuthenticated = bool.Parse(data[0]);
-                string userID = data[1];
-                using (var context = new AppContentDbContext(
+            using (var context = new AppContentDbContext(
                    new DbContextOptionsBuilder<AppContentDbContext>()
                    .UseSqlServer(Startup.Connection)
                    .Options))
+            {
+                string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                if (User.Identity.IsAuthenticated)
                 {
-                    if (isAuthenticated)
-                        preferences = AppContentDbContext.GetUserPreferences(userID);
-                    else preferences = new UserPreferences();
+                    preferences = context.UserPreferences.FirstOrDefault(p => p.UserID == currentUserID);
+                    if (preferences == null)
+                    {
+                        context.UserPreferences.Add(preferences = new UserPreferences()
+                        {
+                            UserID = currentUserID
+                        });
+                        context.SaveChanges();
+                    }
                 }
+                else preferences = new UserPreferences();
             }
             return new JsonResult(preferences.IsDarkTheme + ";" + preferences.IsEnglishVersion);
+        }
+
+        public async Task<IActionResult> OnPostSwitchTheme()
+        {
+            UserPreferences preferences;
+            bool isLightTheme;
+            using (var context = new AppContentDbContext(
+                   new DbContextOptionsBuilder<AppContentDbContext>()
+                   .UseSqlServer(Startup.Connection)
+                   .Options))
+            {
+                string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                if (User.Identity.IsAuthenticated)
+                {
+                    preferences = await context.UserPreferences.FirstOrDefaultAsync(p => p.UserID == currentUserID);
+                    if (preferences == null)
+                        await context.UserPreferences.AddAsync(preferences = new UserPreferences()
+                        {
+                            UserID = currentUserID
+                        });
+                }
+                else preferences = new UserPreferences();
+
+                isLightTheme = preferences.IsDarkTheme = !preferences.IsDarkTheme;
+                context.SaveChanges();
+            }
+            return new JsonResult(isLightTheme);
         }
     }
 }

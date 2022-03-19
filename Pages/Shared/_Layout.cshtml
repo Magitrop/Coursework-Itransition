@@ -4,13 +4,22 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="google-signin-client_id" content="564779073358-cmid54hfafggfs8v8425icrmkvuubmb3.apps.googleusercontent.com">
-    <title>@ViewData["Title"] - RazorCoursework</title>
+    <title>Coursework-Itransition</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@forevolve/bootstrap-dark@1.1.0/dist/css/bootstrap-light.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@forevolve/bootstrap-dark@1.1.0/dist/css/bootstrap-prefers-dark.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@forevolve/bootstrap-dark@1.0.0/dist/css/toggle-bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@forevolve/bootstrap-dark@1.0.0/dist/css/toggle-bootstrap-dark.min.css" />
+    @*<link rel="stylesheet" href="~/css/site.css" />*@
+    <style>
+        a {
+            color: #656565;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-themed border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-page="/Index">Coursework-Itransition</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -22,7 +31,7 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark"
+                                <a class="nav-link text-themed"
                                    asp-area=""
                                    asp-page="/Home"
                                    asp-route-user="@User.Identity.Name"
@@ -30,10 +39,15 @@
                             </li>
                         }
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
+                            <a class="nav-link text-themed"
                                asp-area=""
                                asp-page="/SearchReviews"
                                asp-route-p="1">Все обзоры</a>
+                        </li>
+                        <li class="nav-item">
+                            <button id="btn-switch-theme" class="btn nav-link text-themed" style="outline: none">
+                                Сменить тему
+                            </button>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />
@@ -58,3 +72,52 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+<script>
+    $.ajax({
+            type: "POST",
+            url: "/Home?handler=UserPreferences",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                var data = response.split(';');
+                var darkTheme = data[0];
+                $('body').addClass((darkTheme == 'True') ? 'bootstrap-dark' : 'bootstrap-light');
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+        $('#btn-switch-theme').on("click", function(e) 
+        {
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: "/Home?handler=SwitchTheme",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    if (response)
+                    {
+                        $('body').removeClass('bootstrap-light');
+                        $('body').addClass('bootstrap-dark');
+                    }
+                    else
+                    {
+                        $('body').removeClass('bootstrap-dark');
+                        $('body').addClass('bootstrap-light');
+                    }
+                },
+                failure: function (response) {
+                    alert(response);
+                }
+            });
+        });
+</script>

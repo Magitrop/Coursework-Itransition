@@ -140,7 +140,8 @@ namespace RazorCoursework.Pages
                 Directory.CreateDirectory(tempDirectory);
 
             string pictureLinks = string.Empty;
-            using (var dbx = new DropboxClient("sl.BD-rvojmRetHizU_K9JtztYfcE-WInTNgZmaq3n1JNPU6Vo0_Erg4YmxX4bqdOPSHa2Q91ErOm0fb_RaDI1LOPAT7AiPOzf_fpgYMs2HrHJ-5gQdfNEqFpIELnRketeaeeloXKwOQOcP"))
+            using (var dbx = new DropboxClient(
+                "sl.BEHaBHeVKFautrwbBtUV_d000Sod8mPlOGn8jzJBJa1vcoCpxx_i4R5W7pI-ZbB5V925lTJfI9r7_Ik_a-D6gqbCJxswbP7GHzIUpHxPFs_tcYUL5055QYCxvb04d8k5I0rY7Ai7re3b"))
             {
                 foreach (var file in Request.Form.Files)
                 {

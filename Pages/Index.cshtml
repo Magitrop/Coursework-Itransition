@@ -5,29 +5,38 @@
 }
 
 <style>
+    .row {
+        overflow-x: auto;
+    }
+
     td {
         padding: 5px 20px 5px 20px;
-        width: 250px;
+        width: 200px;
         cursor: pointer;
     }
 
     .review-row {
         transition: all ease-in-out 0.25s;
-        background-color: white;
-        color: black;
     }
 
-        .review-row:hover {
-            background-color: #808080;
-            color: white;
-        }
+    .review-row:hover {
+        background-color: #606060;
+        color: white;
+    }
+
+    table {
+        width: 80%; 
+        overflow: scroll; 
+        margin-left: auto; 
+        margin-right: auto
+    }
 </style>
 
 
 <h2 class="text-center">
     Последние обзоры пользователей
 </h2>
-<div class="row justify-content-center" style="margin-bottom: 20px">
+<div class="row" style="margin-bottom: 20px">
     <table>
         @if (Model.recentReviews.Count > 0)
         {
@@ -51,7 +60,7 @@
             <tr class="border border-dark review-row text-center"
                 onclick="location.href='@(Url.Page("ReviewComments", new { id = r.ReviewID }))'">
                 <td class="border border-dark">
-                    <a class="btn btn-light btn-outline-dark"
+                    <a class="nav-link text-themed"
                        asp-page="/Home"
                        asp-route-user="@r.ReviewCreatorName"
                        asp-route-p="1">
@@ -86,7 +95,7 @@
 <h2 class="text-center">
     Обзоры с самыми большими оценками
 </h2>
-<div class="row justify-content-center" style="margin-bottom: 20px">
+<div class="row" style="margin-bottom: 20px">
     <table>
         @if (Model.topRatedReviews.Count > 0)
         {
@@ -110,7 +119,7 @@
             <tr class="border border-dark review-row text-center"
                 onclick="location.href='@(Url.Page("ReviewComments", new { id = Model.topRatedReviews[i].ReviewID }))'">
                 <td class="border border-dark">
-                    <a class="btn btn-light btn-outline-dark"
+                    <a class="nav-link text-themed"
                        asp-page="/Home"
                        asp-route-user="@Model.topRatedReviews[i].ReviewCreatorName"
                        asp-route-p="1">

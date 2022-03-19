@@ -1,23 +1,32 @@
 ﻿<style>
+    .row {
+        overflow-x: auto;
+    }
+
     td {
         padding: 5px 20px 5px 20px;
-        width: 250px;
+        width: 200px;
         cursor: pointer;
     }
 
     .review-row {
         transition: all ease-in-out 0.25s;
-        background-color: white;
-        color: black;
     }
 
     .review-row:hover {
-        background-color: #808080;
+        background-color: #606060;
         color: white;
+    }
+
+    table {
+        width: 80%; 
+        overflow: scroll; 
+        margin-left: auto; 
+        margin-right: auto
     }
 </style>
 
-<div class="row justify-content-center">
+<div class="row">
     <table>
         @if (Model.reviews.Count > 0)
         {
@@ -38,10 +47,10 @@
         }
         @foreach (var r in Model.reviews)
         {
-        <tr class="border border-dark review-row text-center"
+        <tr class="border border-dark review-row bg-themed text-center"
             onclick="location.href='@(Url.Page("ReviewComments", new { id = r.ReviewID }))'">
             <td class="border border-dark">
-                <a class="btn btn-light btn-outline-dark"
+                <a class="nav-link text-themed"
                    asp-page="/Home"
                    asp-route-user="@r.ReviewCreatorName"
                    asp-route-p="1">
@@ -58,15 +67,15 @@
             </td>
             <td class="border border-dark">
                 @foreach (var t in r.TagRelations)
-                    {
-                <a class="btn btn-light btn-outline-dark"
-                   asp-page="SearchReviews"
-                   asp-route-tag="@t.Tag.TagName"
-                   asp-route-p="1"
-                   style="margin: 5px">
-                    <span class="d-inline-block">@t.Tag.TagName</span>
-                </a>
-                    }
+                {
+                    <a class="btn btn-light btn-outline-dark"
+                        asp-page="SearchReviews"
+                        asp-route-tag="@t.Tag.TagName"
+                        asp-route-p="1"
+                        style="margin: 5px">
+                        <span class="d-inline-block">@t.Tag.TagName</span>
+                    </a>
+                }
             </td>
         </tr>
         }
