@@ -105,30 +105,30 @@
                 </td>
             </tr>
         }
-        @foreach (var r in Model.topRatedReviews)
+        @for (int i = 0; i < Model.topRatedReviews.Count; i++)
         {
             <tr class="border border-dark review-row text-center"
-                onclick="location.href='@(Url.Page("ReviewComments", new { id = r.ReviewID }))'">
+                onclick="location.href='@(Url.Page("ReviewComments", new { id = Model.topRatedReviews[i].ReviewID }))'">
                 <td class="border border-dark">
                     <a class="btn btn-light btn-outline-dark"
                        asp-page="/Home"
-                       asp-route-user="@r.ReviewCreatorName"
+                       asp-route-user="@Model.topRatedReviews[i].ReviewCreatorName"
                        asp-route-p="1">
-                        @r.ReviewCreatorName (@Model.GetCreatorLikesCount(r.ReviewCreatorID)
+                        @Model.topRatedReviews[i].ReviewCreatorName (@Model.GetCreatorLikesCount(Model.topRatedReviews[i].ReviewCreatorID)
                         <img src="https://img.icons8.com/material/24/000000/like--v1.png"
                              width="15" height="15" />)
                     </a>
                 </td>
                 <td class="border border-dark">
-                    @r.ReviewSubjectName @*(@r.likesCount
+                    @Model.topRatedReviews[i].ReviewSubjectName (@Model.topRatedReviewLikes[i]
                     <img src="https://img.icons8.com/material/24/000000/like--v1.png"
-                         width="15" height="15" />)*@
+                         width="15" height="15" />)
                 </td>
                 <td class="border border-dark">
-                    @r.ReviewSubjectGenre
+                    @Model.topRatedReviews[i].ReviewSubjectGenre
                 </td>
                 <td class="border border-dark">
-                    @foreach (var t in r.TagRelations)
+                    @foreach (var t in Model.topRatedReviews[i].TagRelations)
                     {
                         <a class="btn btn-light btn-outline-dark"
                            asp-page="SearchReviews"

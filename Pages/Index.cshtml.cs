@@ -21,6 +21,7 @@ namespace RazorCoursework.Pages
 
         public List<Review> recentReviews { get; set; } = new List<Review>();
         public List<Review> topRatedReviews { get; set; } = new List<Review>();
+        public List<int> topRatedReviewLikes { get; set; } = new List<int>();
         public int showReviewsCount { get; set; } = 5;
 
         public void OnGet()
@@ -61,6 +62,8 @@ namespace RazorCoursework.Pages
                     .Include(r => r.TagRelations)
                     .ThenInclude(t => t.Tag)
                     .Where(r => groups.Any(g => g == r.ReviewID)).ToList();
+                foreach (var review in topRatedReviews)
+                    topRatedReviewLikes.Add(context.ReviewLikes.Where(l => l.ReviewID == review.ReviewID).Count());
             }
         }
 

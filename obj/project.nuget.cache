@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "xoHWu+ZP19znXA005F1UVQb+y/N1b6HBEwTi7nep6Vy+RIQeLWC2ZP4AlkpN30I5o21In2PhPpDAurk8BO6DpA==",
+  "dgSpecHash": "ItPesTg9nNYOc9uFPDCGUhfJMQEE3s6/oILge5L2kXvCkg0+zAd9TxEfUXYCz0rs4EGfNwUnM+po5SeTKRzlbw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Schweppes_psina\\Desktop\\C# Projects\\Coursework-Itransition\\RazorCoursework.csproj",
+  "projectFilePath": "C:\\Users\\Schweppes_psina\\Desktop\\Проекты\\C# Projects\\Coursework-Itransition\\RazorCoursework.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Schweppes_psina\\.nuget\\packages\\azure.core\\1.4.1\\azure.core.1.4.1.nupkg.sha512",
     "C:\\Users\\Schweppes_psina\\.nuget\\packages\\azure.extensions.aspnetcore.configuration.secrets\\1.0.0\\azure.extensions.aspnetcore.configuration.secrets.1.0.0.nupkg.sha512",
@@ -12,6 +12,7 @@
     "C:\\Users\\Schweppes_psina\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\Schweppes_psina\\.nuget\\packages\\megaapiclient\\1.10.2\\megaapiclient.1.10.2.nupkg.sha512",
     "C:\\Users\\Schweppes_psina\\.nuget\\packages\\microsoft.aspnetcore.authentication.google\\5.0.15\\microsoft.aspnetcore.authentication.google.5.0.15.nupkg.sha512",
+    "C:\\Users\\Schweppes_psina\\.nuget\\packages\\microsoft.aspnetcore.authentication.microsoftaccount\\5.0.15\\microsoft.aspnetcore.authentication.microsoftaccount.5.0.15.nupkg.sha512",
     "C:\\Users\\Schweppes_psina\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\5.0.12\\microsoft.aspnetcore.cryptography.internal.5.0.12.nupkg.sha512",
     "C:\\Users\\Schweppes_psina\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\5.0.12\\microsoft.aspnetcore.cryptography.keyderivation.5.0.12.nupkg.sha512",
     "C:\\Users\\Schweppes_psina\\.nuget\\packages\\microsoft.aspnetcore.diagnostics.entityframeworkcore\\5.0.13\\microsoft.aspnetcore.diagnostics.entityframeworkcore.5.0.13.nupkg.sha512",

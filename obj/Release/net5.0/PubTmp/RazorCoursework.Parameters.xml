@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <parameters>
   <parameter name="IIS Web Application Name" description="" value="Coursework-Itransition" tags="IisApp">
-    <parameterEntry kind="ProviderPath" scope="IisApp" match="^E:\\C\#\ Projects\\Coursework-Itransition\\obj\\Release\\net5\.0\\PubTmp\\Out\\$" />
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^C:\\Users\\Schweppes_psina\\Desktop\\Проекты\\C\#\ Projects\\Coursework-Itransition\\obj\\Release\\net5\.0\\PubTmp\\Out\\$" />
   </parameter>
   <parameter name="RazorCoursework.Data.AppContentDbContext" description="" value="Server=tcp:courseworkdbserver.database.windows.net,1433;Initial Catalog=RazorCoursework_db;Persist Security Info=False;User ID=Magitrop;Password=12qw12qW;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" tags="dbfullsql">
-    <parameterEntry kind="ProviderPath" scope="dbfullsql" match="^E:\\C\#\ Projects\\Coursework-Itransition\\obj\\Release\\net5\.0\\PubTmp\\EFSQLScripts\\RazorCoursework\.Data\.AppContentDbContext\.sql$" />
+    <parameterEntry kind="ProviderPath" scope="dbfullsql" match="^C:\\Users\\Schweppes_psina\\Desktop\\Проекты\\C\#\ Projects\\Coursework-Itransition\\obj\\Release\\net5\.0\\PubTmp\\EFSQLScripts\\RazorCoursework\.Data\.AppContentDbContext\.sql$" />
   </parameter>
   <parameter name="RazorCoursework.Data.ApplicationDbContext" description="" value="Server=tcp:courseworkdbserver.database.windows.net,1433;Initial Catalog=RazorCoursework_db;Persist Security Info=False;User ID=Magitrop;Password=12qw12qW;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" tags="dbfullsql">
-    <parameterEntry kind="ProviderPath" scope="dbfullsql" match="^E:\\C\#\ Projects\\Coursework-Itransition\\obj\\Release\\net5\.0\\PubTmp\\EFSQLScripts\\RazorCoursework\.Data\.ApplicationDbContext\.sql$" />
+    <parameterEntry kind="ProviderPath" scope="dbfullsql" match="^C:\\Users\\Schweppes_psina\\Desktop\\Проекты\\C\#\ Projects\\Coursework-Itransition\\obj\\Release\\net5\.0\\PubTmp\\EFSQLScripts\\RazorCoursework\.Data\.ApplicationDbContext\.sql$" />
   </parameter>
 </parameters>

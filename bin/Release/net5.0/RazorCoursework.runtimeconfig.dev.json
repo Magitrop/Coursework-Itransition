@@ -1,9 +1,9 @@
 {
   "runtimeOptions": {
     "additionalProbingPaths": [
-      "C:\\Users\\magit\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\magit\\.nuget\\packages",
-      "E:\\Visual Studio 2019\\Shared\\NuGetPackages"
+      "C:\\Users\\Schweppes_psina\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\Schweppes_psina\\.nuget\\packages",
+      "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
     ]
   }
 }
