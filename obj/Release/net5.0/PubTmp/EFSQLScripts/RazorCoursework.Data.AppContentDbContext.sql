@@ -64,7 +64,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220226155247_AddedUserReviews')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20220226155247_AddedUserReviews', N'5.0.13');
+    VALUES (N'20220226155247_AddedUserReviews', N'5.0.15');
 END;
 GO
 
@@ -83,7 +83,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220227131841_AddedReviewsCreationDate')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20220227131841_AddedReviewsCreationDate', N'5.0.13');
+    VALUES (N'20220227131841_AddedReviewsCreationDate', N'5.0.15');
 END;
 GO
 
@@ -133,7 +133,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220227205404_RatingsAndLikes')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20220227205404_RatingsAndLikes', N'5.0.13');
+    VALUES (N'20220227205404_RatingsAndLikes', N'5.0.15');
 END;
 GO
 
@@ -152,7 +152,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220228184110_AddedReviewCreatorName')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20220228184110_AddedReviewCreatorName', N'5.0.13');
+    VALUES (N'20220228184110_AddedReviewCreatorName', N'5.0.15');
 END;
 GO
 
@@ -177,7 +177,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220311085117_AddedUserPreferences')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20220311085117_AddedUserPreferences', N'5.0.13');
+    VALUES (N'20220311085117_AddedUserPreferences', N'5.0.15');
 END;
 GO
 
@@ -190,7 +190,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20220316221558_DbTablesBackup')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20220316221558_DbTablesBackup', N'5.0.13');
+    VALUES (N'20220316221558_DbTablesBackup', N'5.0.15');
 END;
 GO
 

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.IO;
+using Dropbox.Api;
 
 namespace RazorCoursework.Pages
 {
@@ -23,7 +24,7 @@ namespace RazorCoursework.Pages
         public int pagesCount { get; set; }
 
         public void OnGet(string user, int p)
-        {
+        {   
             userName = user;
             if (IsPageCorrect(p))
                 LoadReviews();

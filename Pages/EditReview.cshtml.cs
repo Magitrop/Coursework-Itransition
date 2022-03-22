@@ -187,7 +187,9 @@ namespace RazorCoursework.Pages
                                 var uploaded = await dbx.Files.UploadAsync(
                                     "/" + Guid.NewGuid() + "_" + file.FileName,
                                     body: fileStream);
-                                pictureLinks += (await dbx.Files.GetTemporaryLinkAsync(uploaded.PathLower)).Link + ";";
+                                pictureLinks +=
+                                    (await dbx.Sharing.CreateSharedLinkWithSettingsAsync(uploaded.PathLower))
+                                    .Url.Replace("dl=0", "raw=1") + ";";
                             }
                             System.IO.File.Delete(filepath);
                         }

@@ -1825,3 +1825,11 @@ C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransiti
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\RazorCoursework.pdb
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\RazorCoursework.genruntimeconfig.cache
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\ref\RazorCoursework.dll
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\bin\Release\net5.0\Microsoft.AspNetCore.Authentication.MicrosoftAccount.dll
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\bin\Release\net5.0\Azure.Storage.Blobs.dll
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\bin\Release\net5.0\Azure.Storage.Common.dll
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\bin\Release\net5.0\Azure.Storage.Files.Shares.dll
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\bin\Release\net5.0\Azure.Storage.Queues.dll
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\bin\Release\net5.0\Microsoft.Extensions.Azure.dll
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\bin\Release\net5.0\System.IO.Hashing.dll
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\bin\Release\net5.0\System.Memory.Data.dll

@@ -15,13 +15,17 @@ namespace RazorCoursework.Pages
     {
         public List<Review> reviews { get; set; }
         public int reviewsPerPage { get; set; } = 10;
+        public string currentSearchCondition { get; set; }
         public string currentTag { get; set; }
         public int currentPage { get; set; }
         public int pagesCount { get; set; }
 
-        public void OnGet(string tag, int p)
+        public void OnGet(string search, string tag, int p)
         {
-            currentTag = tag ?? string.Empty;
+            currentSearchCondition = search ?? string.Empty;
+            if (currentSearchCondition == string.Empty)
+                currentTag = tag ?? string.Empty;
+
             if (IsPageCorrect(p))
                 LoadReviews();
             else reviews = new List<Review>();
@@ -35,7 +39,9 @@ namespace RazorCoursework.Pages
 
         private void LoadReviews()
         {
-            if (currentTag != string.Empty)
+            if (currentSearchCondition != string.Empty)
+                LoadReviewsWithText();
+            else if (currentTag != string.Empty)
                 LoadReviewsWithTag();
             else LoadAllReviews();
         }
@@ -47,20 +53,44 @@ namespace RazorCoursework.Pages
                    .UseSqlServer(Startup.Connection)
                    .Options))
             {
-                reviews =
-                    context.ReviewAndTagRelations
+                var all = context.ReviewAndTagRelations
                     .Include(r => r.Review)
                     .ThenInclude(r => r.TagRelations)
                     .ThenInclude(t => t.Tag)
-                    .Where(r => r.Tag.TagName == currentTag)
+                    .Where(r => r.Tag.TagName == currentTag);
+
+                reviews = all
                     .Select(r => r.Review)
                     .OrderByDescending(t => t.CreationDate)
                     .Skip((currentPage - 1) * reviewsPerPage)
                     .Take(reviewsPerPage)
                     .ToList();
+                
+                double reviewsDividedByPages = all.Count() / (double)reviewsPerPage;
+                pagesCount = (int)Math.Ceiling(reviewsDividedByPages);
+            }
+        }
 
+        private void LoadReviewsWithText()
+        {
+            using (var context = new AppContentDbContext(
+                   new DbContextOptionsBuilder<AppContentDbContext>()
+                   .UseSqlServer(Startup.Connection)
+                   .Options))
+            {
                 var all = context.ReviewAndTagRelations
-                    .Where(r => r.Tag.TagName == currentTag);
+                    .Include(r => r.Review)
+                    .ThenInclude(r => r.TagRelations)
+                    .ThenInclude(t => t.Tag)
+                    .Select(r => r.Review)
+                    .Where(r => EF.Functions.FreeText(r.ReviewText, currentSearchCondition));
+
+                reviews = all
+                    .OrderByDescending(t => t.CreationDate)
+                    .Skip((currentPage - 1) * reviewsPerPage)
+                    .Take(reviewsPerPage)
+                    .ToList();
+
                 double reviewsDividedByPages = all.Count() / (double)reviewsPerPage;
                 pagesCount = (int)Math.Ceiling(reviewsDividedByPages);
             }

@@ -44,11 +44,14 @@
                                asp-page="/SearchReviews"
                                asp-route-p="1">Все обзоры</a>
                         </li>
-                        <li class="nav-item">
-                            <button id="btn-switch-theme" class="btn nav-link text-themed" style="outline: none">
-                                Сменить тему
-                            </button>
-                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <button id="btn-switch-theme" class="btn nav-link text-themed" style="outline: none">
+                                    Сменить тему
+                                </button>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

@@ -3,6 +3,10 @@
     "mssql1": {
       "restored": true,
       "restoreTime": "2022-03-18T15:22:22.9672464Z"
+    },
+    "storage1": {
+      "restored": true,
+      "restoreTime": "2022-03-22T21:15:57.8058396Z"
     }
   },
   "parameters": {
@@ -15,6 +19,16 @@
       "Name": "mssql1.resourceGroupName",
       "Type": "resourceGroup",
       "Value": "ResourceGroup"
+    },
+    "storage1.resourceGroupName": {
+      "Name": "storage1.resourceGroupName",
+      "Type": "resourceGroup",
+      "Value": "ResourceGroup"
+    },
+    "storage1.subscriptionId": {
+      "Name": "storage1.subscriptionId",
+      "Type": "subscription",
+      "Value": "f3e19615-8a1e-4ec0-aba9-8eee25a5d606"
     }
   }
 }

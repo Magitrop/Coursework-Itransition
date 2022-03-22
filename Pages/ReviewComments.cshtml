@@ -3,8 +3,37 @@
 @{
 }
 
-<div class="row justify-content-center">
-    <div class="col-12 border border-dark text-center" style="margin: 10px">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<style>
+    .page-content {
+        background-color: inherit;
+    }
+
+    .CodeMirror {
+        overflow: hidden;
+        border: none;
+        color: inherit;
+        background-color: inherit;
+    }
+
+    .CodeMirror-vscrollbar {
+        overflow-y: hidden;
+    }
+
+    .CodeMirror-scroll {
+        display: none;
+    }
+
+    .editor-preview {
+        word-break: break-word;
+        position: relative;
+        overflow: visible;
+        background-color: inherit;
+    }
+</style>
+
+<div class="row justify-content-center navbar-themed"> 
+    <div class="col-12 border border-dark text-center page-content" style="margin: 10px">
         <a class="text-muted"
            asp-area=""
            asp-page="/Home"
@@ -20,20 +49,24 @@
         <h4 style="margin-top: 30px; margin-bottom: 30px">@Model.Review.ReviewSubjectName</h4>
         <h5 class="text-muted">@Model.Review.ReviewSubjectGenre</h5>
         <hr />
-        <p>@Model.Review.ReviewText</p>
+        <textarea id="ReviewText" class="form-control" readonly>@Model.Review.ReviewText</textarea>
+        @*<p>@Model.Review.ReviewText</p>*@
         <hr />
-        <p>Теги:</p>
-        <div style="margin-bottom: 30px" class="d-block">
-            @foreach (var t in Model.Review.TagRelations)
-            {
-                <a class="btn btn-light btn-outline-dark"
-                   asp-page="SearchReviews"
-                   asp-route-tag="@t.Tag.TagName"
-                   asp-route-p="1">
-                    <span class="d-inline-block">@t.Tag.TagName</span>
-                </a>
-            }
-        </div>
+        @if (Model.Review.TagRelations.Count > 0)
+        {
+            <p>Теги:</p>
+            <div style="margin-bottom: 30px" class="d-block">
+                @foreach (var t in Model.Review.TagRelations)
+                {
+                    <a class="btn btn-light btn-outline-dark"
+                       asp-page="SearchReviews"
+                       asp-route-tag="@t.Tag.TagName"
+                       asp-route-p="1">
+                        <span class="d-inline-block">@t.Tag.TagName</span>
+                    </a>
+                }
+            </div>
+        }
         @if (User.Identity.IsAuthenticated)
         {
             <form id="form-like-@Model.Review.ReviewID" onsubmit="return false;">
@@ -74,18 +107,19 @@
                             type="submit"
                             style="border: none;
                                    outline: none;
-                                   background: none">
+                                   background: none;
+                                   padding: 0; margin: 0;">
                         @if (Model.ReviewRating >= i)
                         {
                             <img id="img-rating-@i-@Model.Review.ReviewID"
                                  src="https://img.icons8.com/ios-filled/30/000000/star--v1.png"
-                                 width="25" height="25" />
+                                 width="25" height="25"/>
                         }
                         else
                         {
                             <img id="img-rating-@i-@Model.Review.ReviewID"
                                  src="https://img.icons8.com/ios/30/000000/star--v1.png"
-                                 width="25" height="25" />
+                                 width="25" height="25"/>
                         }
                     </button>
                 }
@@ -121,7 +155,8 @@
                       border: none;
                       outline: none;
                       background: none;
-                      cursor: default">
+                      cursor: default;
+                      padding: 0; margin: 0;">
                 @if (Model.ReviewAuthorRating >= i)
                 {
                     <img id="img-author-rating-@i-@Model.Review.ReviewID"
@@ -153,7 +188,19 @@
 </div>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 <script>
+    var simplemde = new SimpleMDE({ 
+            element: $("#ReviewText")[0],
+            lineWrapping: true,
+            placeholder: 'Введите текст...',
+            toolbar: false,
+            spellChecker: false,
+            status: false,
+        });
+    simplemde.togglePreview();
+    $('.editor-preview').addClass('text-themed');
+
     $('[id^="btn-like"]').on('click', function () {
         var id = $(this).closest('form').serializeArray().reduce(function (obj, item) {
             obj[item.name] = item.value;

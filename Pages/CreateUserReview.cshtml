@@ -5,9 +5,40 @@
 }
 
 <link rel="stylesheet" href="~/lib/amsify-suggestags/css/amsify.suggestags.css">
-<h2>Добавить новый обзор</h2>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<style>
+    .CodeMirror {
+        color: inherit;
+        background-color: inherit;
+    }
 
-<form id="review" method="post" enctype="multipart/form-data">
+    .editor-preview {
+        word-break: break-word;
+        position: relative;
+        background-color: inherit;
+    }
+
+    .editor-toolbar a {
+        color: inherit !important;
+    }
+
+    .amsify-suggestags-list {
+        background: inherit;
+    }
+
+    .amsify-list .active {
+        background: #8b8b8b !important;
+    }
+
+    .amsify-suggestags-input {
+        background: inherit;
+        color: inherit;
+        max-width: 130px !important;
+    }
+</style>
+
+<form id="review" method="post" enctype="multipart/form-data" style="padding: 20px">
+    <h2>Добавить новый обзор</h2>
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
         <label asp-for="Input.ReviewSubjectName"></label>
@@ -29,7 +60,7 @@
     </div>
     <div class="form-group">
         <label asp-for="Input.ReviewText"></label>
-        <textarea asp-for="Input.ReviewText" class="form-control"></textarea>
+        <textarea asp-for="Input.ReviewText" id="InputText" class="form-control"></textarea>
         <span asp-validation-for="Input.ReviewText" class="text-danger"></span>
     </div>
     <div class="form-group">
@@ -52,10 +83,17 @@
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/lib/amsify-suggestags/js/jquery.amsify.suggestags.js"></script>
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
     
     <script>
-        var filesCount = 0;
+        var simplemde = new SimpleMDE({ 
+            element: $("#InputText")[0],
+            lineWrapping: true,
+            spellChecker: false,
+            toolbar: ["bold", "italic", "heading", "|", "quote"]
+        });
 
+        var filesCount = 0;
         $('#input-tags').amsifySuggestags({
             type: 'amsify',
             suggestMatch: function (suggestionItem, value) {
@@ -75,6 +113,7 @@
                 },
             }
         });
+        $('.amsify-suggestags-list').addClass('navbar-themed');
 
         $('#group-files').on('change', 'input[type=file]', function () {
             filesCount++;

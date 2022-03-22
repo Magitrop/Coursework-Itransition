@@ -155,7 +155,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'00000000000000_CreateIdentitySchema')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'00000000000000_CreateIdentitySchema', N'5.0.13');
+    VALUES (N'00000000000000_CreateIdentitySchema', N'5.0.15');
 END;
 GO
 

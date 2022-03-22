@@ -15,6 +15,7 @@ using CG.Web.MegaApiClient;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Dropbox.Api;
+using Azure.Storage.Blobs;
 
 namespace RazorCoursework.Pages
 {
@@ -78,6 +79,7 @@ namespace RazorCoursework.Pages
                    .UseSqlServer(Startup.Connection)
                    .Options))
                 {
+                    context.Reviews.Where(r => EF.Functions.Contains(r.ReviewText, ""));
                     var newReview = new Review()
                     {
                         ReviewCreatorID = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value,
@@ -141,34 +143,35 @@ namespace RazorCoursework.Pages
 
             string pictureLinks = string.Empty;
             using (var dbx = new DropboxClient(
-                "sl.BEHaBHeVKFautrwbBtUV_d000Sod8mPlOGn8jzJBJa1vcoCpxx_i4R5W7pI-ZbB5V925lTJfI9r7_Ik_a-D6gqbCJxswbP7GHzIUpHxPFs_tcYUL5055QYCxvb04d8k5I0rY7Ai7re3b"))
+                "sl.BEFWUM1ofDCiPcKD00AeCYMgduuzDUBlzocDjqOkOdvBH6SBg8llAfj-khPPitEwrEvj4abqZovGlaFvwg1YDNv7uqeAxpYixsBRvBOG22HUe5XAwCQeFSy0ggA1gYHqQ-hQICUfgt0E"))
             {
                 foreach (var file in Request.Form.Files)
                 {
                     string filepath = string.Empty;
                     if (file.Length > 0)
                     {
-                        using (var stream = new FileStream(
-                            tempDirectory + Guid.NewGuid() + "_" + file.FileName, FileMode.CreateNew))
+                        if (file.Length <= 4096 * 1024)
                         {
-                            file.CopyTo(stream);
-                            filepath = stream.Name;
+                            using (var stream = new FileStream(
+                                tempDirectory + Guid.NewGuid() + "_" + file.FileName, FileMode.CreateNew))
+                            {
+                                file.CopyTo(stream);
+                                filepath = stream.Name;
+                            }
+                            using (var fileStream = System.IO.File.Open(filepath, FileMode.Open))
+                            {
+                                var uploaded = await dbx.Files.UploadAsync(
+                                    "/" + Guid.NewGuid() + "_" + file.FileName,
+                                    body: fileStream);
+                                pictureLinks +=
+                                    (await dbx.Sharing.CreateSharedLinkWithSettingsAsync(uploaded.PathLower))
+                                    .Url.Replace("dl=0", "raw=1") + ";";
+                            }
+                            System.IO.File.Delete(filepath);
                         }
+                        else
+                            ModelState.AddModelError(string.Empty, "Вес загружаемого изображения не должен превышать 4 МБ.");
                     }
-                    using (var fileStream = System.IO.File.Open(filepath, FileMode.Open))
-                    {
-                        //if (fileStream.Length <= 4096 * 1024)
-                        {
-                            var uploaded = await dbx.Files.UploadAsync(
-                                "/" + Guid.NewGuid() + "_" + file.FileName,
-                                body: fileStream);
-                            pictureLinks += 
-                                (await dbx.Sharing.CreateSharedLinkWithSettingsAsync(uploaded.PathLower))
-                                .Url.Replace("dl=0", "raw=1") + ";";
-                            //pictureLinks += (await dbx.Files.GetTemporaryLinkAsync(uploaded.PathLower)).Link + ";";
-                        }
-                    }
-                    System.IO.File.Delete(filepath);
                 }
             }
 
