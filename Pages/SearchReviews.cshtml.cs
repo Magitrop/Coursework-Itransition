@@ -13,7 +13,7 @@ namespace RazorCoursework.Pages
 {
     public class SearchReviewsModel : PageModel
     {
-        public List<Review> reviews { get; set; }
+        public List<ReviewsListWithHeader> reviews { get; set; }
         public int reviewsPerPage { get; set; } = 10;
         public string currentSearchCondition { get; set; }
         public string currentTag { get; set; }
@@ -22,13 +22,17 @@ namespace RazorCoursework.Pages
 
         public void OnGet(string search, string tag, int p)
         {
+            reviews = new List<ReviewsListWithHeader>()
+            {
+                new ReviewsListWithHeader(new List<Review>(), string.Empty),
+            };
+
             currentSearchCondition = search ?? string.Empty;
             if (currentSearchCondition == string.Empty)
                 currentTag = tag ?? string.Empty;
 
             if (IsPageCorrect(p))
                 LoadReviews();
-            else reviews = new List<Review>();
         }
 
         private bool IsPageCorrect(int p)
@@ -59,7 +63,7 @@ namespace RazorCoursework.Pages
                     .ThenInclude(t => t.Tag)
                     .Where(r => r.Tag.TagName == currentTag);
 
-                reviews = all
+                reviews[0].list = all
                     .Select(r => r.Review)
                     .OrderByDescending(t => t.CreationDate)
                     .Skip((currentPage - 1) * reviewsPerPage)
@@ -85,7 +89,7 @@ namespace RazorCoursework.Pages
                     .Select(r => r.Review)
                     .Where(r => EF.Functions.FreeText(r.ReviewText, currentSearchCondition));
 
-                reviews = all
+                reviews[0].list = all
                     .OrderByDescending(t => t.CreationDate)
                     .Skip((currentPage - 1) * reviewsPerPage)
                     .Take(reviewsPerPage)
@@ -103,7 +107,7 @@ namespace RazorCoursework.Pages
                    .UseSqlServer(Startup.Connection)
                    .Options))
             {
-                reviews =
+                reviews[0].list =
                     context.Reviews
                     .Include(r => r.TagRelations)
                     .ThenInclude(r => r.Tag)

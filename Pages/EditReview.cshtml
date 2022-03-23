@@ -83,11 +83,11 @@
                    name="File-@file.index"
                    value="@file.link" />
             <div id="uploaded-file-@file.index" style="position: relative">
-                <img src="@file.link" style="width: 100%" />
+                <img src="@file.link" style="width: 75%" />
                 <button id="remove-image-@file.index"
                         type="button"
                         class="btn btn-light btn-outline-dark"
-                        style="position: absolute; top: 10px; right: 10px"
+                        style="position: absolute; top: 10px; right: 26%"
                         onclick="
                             $('#File-@file.index').remove();
                             $(this).parent().remove();">
@@ -115,6 +115,8 @@
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/lib/amsify-suggestags/js/jquery.amsify.suggestags.js"></script>
+    <script src="~/js/attach.image.js"></script>
+    <script src="~/js/tags.input.js"></script>
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 
     <script>
@@ -126,63 +128,5 @@
         });
 
         var filesCount = $('#uploaded-files-count').val();
-        $('#input-tags').amsifySuggestags({
-            type: 'amsify',
-            suggestMatch: function (suggestionItem, value) {
-                return ~suggestionItem.toString().toLowerCase().indexOf(value.toString().toLowerCase());
-            },
-            printValues: false,
-            suggestionsAction: {
-                timeout: -1,
-                minChars: 2,
-                minChange: -1,
-                delay: 100,
-                type: 'POST',
-                url: '/CreateUserReview?handler=Tags',
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader("XSRF-TOKEN",
-                        $('input:hidden[name="__RequestVerificationToken"]').val());
-                },
-            }
-        });
-        $('.amsify-suggestags-list').addClass('navbar-themed');
-
-        $('#group-files').on('change', 'input[type=file]', function () {
-            filesCount++;
-            $(this)
-                .parent()
-                .append('<div id="uploaded-file-' + filesCount + '"><img /></div>')
-                .children('#uploaded-file-' + filesCount)
-                .css({
-                    'position': 'relative'
-                })
-                .append('<button id="remove-image-' + filesCount + '" type="button">&#10005;</button>')
-                .children('button')
-                .addClass('btn btn-light btn-outline-dark')
-                .data('file-index', filesCount)
-                .css({
-                    'position': 'absolute',
-                    'top': '10px',
-                    'right': '10px',
-                })
-                .on("click", function (e) {
-                    $('#File-' + $(this).data('file-index')).remove();
-                    $(this).parent().remove();
-                });
-
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                $('#uploaded-file-' + filesCount + ' img')
-                    .attr("src", e.target.result)
-                    .css('width', '100%');
-            }
-            reader.readAsDataURL($(this)[0].files[0]);
-            $(this).css('display', 'none');
-
-            $(this).parent().append(
-                '<input name="File-' + (filesCount + 1) +
-                '" id="File-' + (filesCount + 1) +
-                '" type="file" class="form-control-file" accept="image/*" />');
-        })
     </script>
 }

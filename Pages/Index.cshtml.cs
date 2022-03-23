@@ -19,13 +19,16 @@ namespace RazorCoursework.Pages
             _logger = logger;
         }
 
-        public List<Review> recentReviews { get; set; } = new List<Review>();
-        public List<Review> topRatedReviews { get; set; } = new List<Review>();
-        public List<int> topRatedReviewLikes { get; set; } = new List<int>();
+        public List<ReviewsListWithHeader> reviews { get; set; }
         public int showReviewsCount { get; set; } = 5;
 
         public void OnGet()
         {
+            reviews = new List<ReviewsListWithHeader>()
+            {
+                new ReviewsListWithHeader(new List<Review>(), "Последние обзоры пользователей"),
+                new ReviewsListWithHeader(new List<Review>(), "Обзоры с самыми большими оценками")
+            };
             LoadRecentReviews();
             LoadTopRatedReviews();
         }
@@ -37,7 +40,7 @@ namespace RazorCoursework.Pages
                    .UseSqlServer(Startup.Connection)
                    .Options))
             {
-                recentReviews = (from review in context.Reviews.Include(r => r.TagRelations).ThenInclude(r => r.Tag)
+                reviews[0].list = (from review in context.Reviews.Include(r => r.TagRelations).ThenInclude(r => r.Tag)
                            orderby review.CreationDate descending
                            select review)
                            .Take(showReviewsCount)
@@ -58,12 +61,10 @@ namespace RazorCoursework.Pages
                          orderby g.Count() descending
                          select g.Key)
                         .Take(showReviewsCount);
-                topRatedReviews = context.Reviews
+                reviews[1].list = context.Reviews
                     .Include(r => r.TagRelations)
                     .ThenInclude(t => t.Tag)
                     .Where(r => groups.Any(g => g == r.ReviewID)).ToList();
-                foreach (var review in topRatedReviews)
-                    topRatedReviewLikes.Add(context.ReviewLikes.Where(l => l.ReviewID == review.ReviewID).Count());
             }
         }
 

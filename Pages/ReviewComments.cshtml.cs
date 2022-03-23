@@ -57,7 +57,7 @@ namespace RazorCoursework.Pages
                     var currentReview = await reviews.FirstOrDefaultAsync(r => r.ReviewID == reviewID);
                     if (currentReview != null)
                     {
-                        string currentUserID = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                        string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
                         Like like = await context.ReviewLikes
                             .FirstOrDefaultAsync(l =>
                             l.ReviewID == currentReview.ReviewID &&

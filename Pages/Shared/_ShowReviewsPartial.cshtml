@@ -26,9 +26,14 @@
     }
 </style>
 
-<div class="row">
+@foreach (var reviewsList in Model.reviews)
+{
+<h2 class="text-center">
+    @reviewsList.header
+</h2>
+<div class="row" style="margin-bottom: 50px">
     <table>
-        @if (Model.reviews.Count > 0)
+        @if (reviewsList.list.Count > 0)
         {
         <tr class="text-center">
             <td>
@@ -45,7 +50,7 @@
             </td>
         </tr>
         }
-        @foreach (var r in Model.reviews)
+        @foreach (var r in reviewsList.list)
         {
         <tr class="border border-dark review-row bg-themed text-center"
             onclick="location.href='@(Url.Page("ReviewComments", new { id = r.ReviewID }))'">
@@ -80,4 +85,5 @@
         </tr>
         }
     </table>
-</div>
+</div>   
+}

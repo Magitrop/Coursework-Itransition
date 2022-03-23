@@ -78,49 +78,49 @@
 
 <script>
     $.ajax({
+        type: "POST",
+        url: "/Home?handler=UserPreferences",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("XSRF-TOKEN",
+                $('input:hidden[name="__RequestVerificationToken"]').val());
+        },
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            var data = response.split(';');
+            var darkTheme = data[0];
+            $('body').addClass((darkTheme == 'True') ? 'bootstrap-dark' : 'bootstrap-light');
+        },
+        failure: function (response) {
+            alert(response);
+        }
+    });
+    $('#btn-switch-theme').on("click", function(e) 
+    {
+        e.preventDefault();
+        $.ajax({
             type: "POST",
-            url: "/Home?handler=UserPreferences",
+            url: "/Home?handler=SwitchTheme",
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("XSRF-TOKEN",
                     $('input:hidden[name="__RequestVerificationToken"]').val());
             },
             contentType: "application/json; charset=utf-8",
-            dataType: "json",
             success: function (response) {
-                var data = response.split(';');
-                var darkTheme = data[0];
-                $('body').addClass((darkTheme == 'True') ? 'bootstrap-dark' : 'bootstrap-light');
+                if (response)
+                {
+                    $('body').removeClass('bootstrap-light');
+                    $('body').addClass('bootstrap-dark');
+                }
+                else
+                {
+                    $('body').removeClass('bootstrap-dark');
+                    $('body').addClass('bootstrap-light');
+                }
             },
             failure: function (response) {
                 alert(response);
             }
         });
-        $('#btn-switch-theme').on("click", function(e) 
-        {
-            e.preventDefault();
-            $.ajax({
-                type: "POST",
-                url: "/Home?handler=SwitchTheme",
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader("XSRF-TOKEN",
-                        $('input:hidden[name="__RequestVerificationToken"]').val());
-                },
-                contentType: "application/json; charset=utf-8",
-                success: function (response) {
-                    if (response)
-                    {
-                        $('body').removeClass('bootstrap-light');
-                        $('body').addClass('bootstrap-dark');
-                    }
-                    else
-                    {
-                        $('body').removeClass('bootstrap-dark');
-                        $('body').addClass('bootstrap-light');
-                    }
-                },
-                failure: function (response) {
-                    alert(response);
-                }
-            });
-        });
+    });
 </script>

@@ -14,9 +14,21 @@ using Dropbox.Api;
 
 namespace RazorCoursework.Pages
 {
+    public class ReviewsListWithHeader
+    {
+        public List<Review> list;
+        public string header;
+
+        public ReviewsListWithHeader(List<Review> _list, string _header)
+        {
+            list = _list;
+            header = _header;
+        }
+    }
+
     public class HomeModel : PageModel
     {
-        public List<Review> reviews { get; set; }
+        public List<ReviewsListWithHeader> reviews { get; set; }
         public string userName { get; set; }
         public int reviewsPerPage { get; set; } = 10;
         public string currentTag { get; set; }
@@ -24,11 +36,14 @@ namespace RazorCoursework.Pages
         public int pagesCount { get; set; }
 
         public void OnGet(string user, int p)
-        {   
+        {
+            reviews = new List<ReviewsListWithHeader>()
+            {
+                new ReviewsListWithHeader(new List<Review>(), string.Empty),
+            };
             userName = user;
             if (IsPageCorrect(p))
                 LoadReviews();
-            else reviews = new List<Review>();
         }
 
         private bool IsPageCorrect(int p)
@@ -53,15 +68,15 @@ namespace RazorCoursework.Pages
                    .UseSqlServer(Startup.Connection)
                    .Options))
             {
-                reviews = (from t in context.Reviews.Include(r => r.TagRelations).ThenInclude(r => r.Tag)
+                reviews[0].list = (from t in context.Reviews.Include(r => r.TagRelations).ThenInclude(r => r.Tag)
                              where t.ReviewCreatorID == creatorID
                              orderby t.CreationDate descending
                              select t).ToList();
 
-                double reviewsDividedByPages = reviews.Count() / (double)reviewsPerPage;
+                double reviewsDividedByPages = reviews[0].list.Count() / (double)reviewsPerPage;
                 pagesCount = (int)Math.Ceiling(reviewsDividedByPages);
 
-                reviews = reviews
+                reviews[0].list = reviews[0].list
                     .Skip((currentPage - 1) * reviewsPerPage)
                     .Take(reviewsPerPage)
                     .ToList();
