@@ -124,7 +124,7 @@
                     </button>
                 }
             </form>
-            if (Model.Review.ReviewCreatorName == User.Identity.Name)
+            if (Model.CheckUserOwnership())
             {
                 <a asp-area=""
                    asp-page="/RemoveReview"

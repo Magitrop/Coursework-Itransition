@@ -29,9 +29,26 @@ namespace RazorCoursework.Pages
                     .ThenInclude(r => r.Tag)
                     .FirstOrDefault(r => r.ReviewID == id);
             }
+            if (Review == null)
+                return NotFound();
+
             ReviewRating = GetRating(id);
             ReviewAuthorRating = GetAuthorRating(id);
             return Page();
+        }
+
+        public bool CheckUserOwnership()
+        {
+            bool result;
+            using (var context = new ApplicationDbContext(
+                   new DbContextOptionsBuilder<ApplicationDbContext>()
+                   .UseSqlServer(Startup.Connection)
+                   .Options))
+            {
+                string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                result = User.Identity.IsAuthenticated && (Review.ReviewCreatorID == currentUserID || User.IsInRole("Admin"));
+            }
+            return result;
         }
 
         public async Task<IActionResult> OnPostLike()

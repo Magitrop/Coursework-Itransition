@@ -79,7 +79,7 @@ namespace RazorCoursework.Pages
                    .UseSqlServer(Startup.Connection)
                    .Options))
                 {
-                    context.Reviews.Where(r => EF.Functions.Contains(r.ReviewText, ""));
+                    var a = context.Reviews.Where(r => EF.Functions.Contains(r.ReviewText, "w"));
                     var newReview = new Review()
                     {
                         ReviewCreatorID = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value,

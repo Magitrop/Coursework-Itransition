@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Dropbox.Api;
@@ -63,9 +64,9 @@ namespace RazorCoursework.Pages
                     .Include(r => r.TagRelations)
                     .ThenInclude(r => r.Tag)
                     .FirstOrDefault(r => r.ReviewID == id);
-                if (!User.Identity.IsAuthenticated || currentReview?.ReviewCreatorName != User.Identity.Name)
-                    return RedirectToPage("/Home", new { user = User.Identity.Name, p = 1 });
-                else
+                string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                bool checkUserOwnership = User.Identity.IsAuthenticated && (currentReview?.ReviewCreatorID == currentUserID || User.IsInRole("Admin"));
+                if (checkUserOwnership)
                 {
                     ReviewSubjectName = currentReview.ReviewSubjectName;
                     ReviewSubjectGenre = currentReview.ReviewSubjectGenre;
@@ -76,6 +77,8 @@ namespace RazorCoursework.Pages
                     foreach (var link in currentReview.AttachedPictureLinks.Split(';').Where(p => p.Length > 0))
                         ReviewPictureLinks.Add((++index, link));
                 }
+                else
+                    return RedirectToPage("/Home", new { user = User.Identity.Name, p = 1 });
             }
 
             return Page();

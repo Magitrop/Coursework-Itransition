@@ -2267,7 +2267,6 @@ C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransiti
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Debug\net5.0\Razor\Pages\Error.cshtml.g.cs
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Debug\net5.0\Razor\Pages\Home.cshtml.g.cs
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Debug\net5.0\Razor\Pages\Index.cshtml.g.cs
-C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Debug\net5.0\Razor\Pages\Privacy.cshtml.g.cs
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Debug\net5.0\Razor\Pages\RemoveReview.cshtml.g.cs
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Debug\net5.0\Razor\Pages\ReviewComments.cshtml.g.cs
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Debug\net5.0\Razor\Pages\SearchReviews.cshtml.g.cs
@@ -2296,3 +2295,4 @@ C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransiti
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\bin\Debug\net5.0\Azure.Storage.Files.Shares.dll
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\bin\Debug\net5.0\Azure.Storage.Queues.dll
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\bin\Debug\net5.0\Microsoft.Extensions.Azure.dll
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Debug\net5.0\Razor\Pages\Admin.cshtml.g.cs

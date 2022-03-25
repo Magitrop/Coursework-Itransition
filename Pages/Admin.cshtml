@@ -1,0 +1,65 @@
+﻿@page
+@model RazorCoursework.Pages.AdminModel
+@{
+}
+
+<style>
+    .row {
+        overflow-x: auto;
+    }
+
+    td {
+        padding: 5px 20px 5px 20px;
+        width: 200px;
+        cursor: pointer;
+    }
+
+    .review-row {
+        transition: all ease-in-out 0.25s;
+    }
+
+    .review-row:hover {
+        background-color: #606060;
+        color: white;
+    }
+
+    table {
+        width: 80%; 
+        overflow: scroll; 
+        margin-left: auto; 
+        margin-right: auto
+    }
+</style>
+
+<h2 class="text-center">
+    Все пользователи
+</h2>
+<div class="row" style="margin-bottom: 50px">
+    <table>
+        @if (Model.users.Count > 0)
+        {
+            <tr class="text-center">
+                <td>
+                    Пользователь
+                </td>
+                <td>
+                    Роль
+                </td>
+            </tr>
+            @foreach (var user in Model.users)
+            {
+                <tr class="border border-dark review-row bg-themed text-center" 
+                    onclick="location.href='@(Url.Page("Home", new { user = user.UserName, p = 1 }))'">
+                    <td class="border border-dark">
+                        @user.UserName (@Model.GetCreatorLikesCount(user.Id)
+                        <img src="https://img.icons8.com/material/24/000000/like--v1.png"
+                            width="15" height="15" />)
+                    </td>
+                    <td class="border border-dark">
+                        @Model.GetRole(user.Id)
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+</div>   

@@ -38,7 +38,8 @@ namespace RazorCoursework
             services.AddDbContext<AppContentDbContext>(options => options.UseSqlServer(Connection));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<IdentityUser>()
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddErrorDescriber<UserErrorsDescriber>();
             services.AddRazorPages();

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +31,9 @@ namespace RazorCoursework.Pages
                     .ThenInclude(r => r.Tag)
                     .FirstOrDefault(r => r.ReviewID == id);
                 CurrentReviewName = currentReview.ReviewSubjectName;
-                if (!User.Identity.IsAuthenticated || currentReview?.ReviewCreatorName != User.Identity.Name)
+                string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                bool checkUserOwnership = User.Identity.IsAuthenticated && (currentReview?.ReviewCreatorID == currentUserID || User.IsInRole("Admin"));
+                if (!checkUserOwnership)
                     return RedirectToPage("/Home", new { user = User.Identity.Name, p = 1 });
             }
 
