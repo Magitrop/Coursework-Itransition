@@ -26,6 +26,7 @@ namespace RazorCoursework.Pages
         }
     }
 
+    [Authorize]
     public class HomeModel : PageModel
     {
         public List<ReviewsListWithHeader> reviews { get; set; }
@@ -177,6 +178,50 @@ namespace RazorCoursework.Pages
                 context.SaveChanges();
             }
             return new JsonResult(isLightTheme);
+        }
+
+        public async Task<IActionResult> OnPostSwitchLanguage()
+        {
+            UserPreferences preferences;
+            using (var context = new AppContentDbContext(
+                   new DbContextOptionsBuilder<AppContentDbContext>()
+                   .UseSqlServer(Startup.Connection)
+                   .Options))
+            {
+                string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                if (User.Identity.IsAuthenticated)
+                {
+                    preferences = await context.UserPreferences.FirstOrDefaultAsync(p => p.UserID == currentUserID);
+                    if (preferences == null)
+                        await context.UserPreferences.AddAsync(preferences = new UserPreferences()
+                        {
+                            UserID = currentUserID
+                        });
+                }
+                else preferences = new UserPreferences();
+
+                LocService.isEnglishVersion = preferences.IsEnglishVersion = !preferences.IsEnglishVersion;
+                context.SaveChanges();
+            }
+            return new JsonResult(LocService.isEnglishVersion);
+        }
+
+        public async Task<IActionResult> OnPostGetLanguage()
+        {
+            UserPreferences preferences;
+            using (var context = new AppContentDbContext(
+                   new DbContextOptionsBuilder<AppContentDbContext>()
+                   .UseSqlServer(Startup.Connection)
+                   .Options))
+            {
+                string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                if (User.Identity.IsAuthenticated)
+                    preferences = await context.UserPreferences.FirstOrDefaultAsync(p => p.UserID == currentUserID);
+                else preferences = new UserPreferences();
+
+                LocService.isEnglishVersion = preferences.IsEnglishVersion;
+            }
+            return new JsonResult(LocService.isEnglishVersion);
         }
     }
 }

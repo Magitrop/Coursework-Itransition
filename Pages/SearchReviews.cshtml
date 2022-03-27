@@ -1,18 +1,20 @@
 ﻿@page
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
 @model RazorCoursework.Pages.SearchReviewsModel
 @{
+
 }
 
 @if (Model.currentTag != null && Model.currentTag != string.Empty)
 {
     <h2 class="text-center">
-        Обзоры пользователей с тегом @Model.currentTag
+        @Localizer["ReviewsWithTag"] @Model.currentTag
     </h2>
 }
 else
 {
     <h2 class="text-center">
-        Все обзоры пользователей
+        @Localizer["AllReviews"]
     </h2>
 }
 

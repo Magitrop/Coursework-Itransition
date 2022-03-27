@@ -1,4 +1,5 @@
 ﻿@page
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
 @model RazorCoursework.Pages.AdminModel
 @{
 }
@@ -32,7 +33,7 @@
 </style>
 
 <h2 class="text-center">
-    Все пользователи
+    @Localizer["AllUsers"]
 </h2>
 <div class="row" style="margin-bottom: 50px">
     <table>
@@ -40,10 +41,10 @@
         {
             <tr class="text-center">
                 <td>
-                    Пользователь
+                    @Localizer["User"]
                 </td>
                 <td>
-                    Роль
+                    @Localizer["Role"]
                 </td>
             </tr>
             @foreach (var user in Model.users)

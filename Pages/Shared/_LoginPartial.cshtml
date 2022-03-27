@@ -1,23 +1,24 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@inject LocService SharedLocalizer
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
         <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post" >
-            <button type="submit" class="nav-link btn text-themed">@User.Identity.Name (Выйти из аккаунта)</button>
+            <button type="submit" class="nav-link btn text-themed">@User.Identity.Name (@SharedLocalizer.GetLocalizedHtmlString("ExitAccount"))</button>
         </form>
     </li>
 }
 else
 {
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Регистрация</a>
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">@SharedLocalizer.GetLocalizedHtmlString("Registration")</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Войти</a>
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">@SharedLocalizer.GetLocalizedHtmlString("Login")</a>
     </li>
 }
 </ul>

@@ -1,4 +1,6 @@
-﻿<style>
+﻿@inject LocService SharedLocalizer
+
+<style>
     .row {
         overflow-x: auto;
     }
@@ -29,7 +31,7 @@
 @foreach (var reviewsList in Model.reviews)
 {
 <h2 class="text-center">
-    @reviewsList.header
+    @SharedLocalizer.GetLocalizedHtmlString(@reviewsList.header)
 </h2>
 <div class="row" style="margin-bottom: 50px">
     <table>
@@ -37,16 +39,16 @@
         {
         <tr class="text-center">
             <td>
-                Автор
+                @SharedLocalizer.GetLocalizedHtmlString("Author")
             </td>
             <td>
-                Название
+                @SharedLocalizer.GetLocalizedHtmlString("SubjectName")
             </td>
             <td>
-                Жанр
+                @SharedLocalizer.GetLocalizedHtmlString("Genre")
             </td>
             <td>
-                Теги
+                @SharedLocalizer.GetLocalizedHtmlString("Tags")
             </td>
         </tr>
         }
@@ -59,7 +61,7 @@
                    asp-page="/Home"
                    asp-route-user="@r.ReviewCreatorName"
                    asp-route-p="1">
-                    @r.ReviewCreatorName (@Model.GetCreatorLikesCount(r.ReviewCreatorID)
+                    @r.ReviewCreatorName <br />(@Model.GetCreatorLikesCount(r.ReviewCreatorID)
                     <img src="https://img.icons8.com/material/24/000000/like--v1.png"
                          width="15" height="15" />)
                 </a>
@@ -68,7 +70,8 @@
                 @r.ReviewSubjectName
             </td>
             <td class="border border-dark">
-                @r.ReviewSubjectGenre
+                @SharedLocalizer.GetLocalizedHtmlString(r.ReviewSubjectGenre)
+                @*@r.ReviewSubjectGenre*@
             </td>
             <td class="border border-dark">
                 @foreach (var t in r.TagRelations)

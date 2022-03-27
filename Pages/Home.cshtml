@@ -1,4 +1,5 @@
 ﻿@page
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
 @model RazorCoursework.Pages.HomeModel
 @{
 }
@@ -7,13 +8,13 @@
 {
     @if (User.Identity.IsAuthenticated)
     {
-        <h2 class="text-center">Мои обзоры</h2>
+        <h2 class="text-center">@Localizer["MyReviews"]</h2>
         <div class="text-center" style="margin-top: 35px; margin-bottom: 35px">
             <a class="nav-link text-themed"
                asp-area=""
                asp-page="/CreateUserReview">
                <span class="border border-dark" style="padding: 10px 15px 10px 15px">
-                    Добавить новый обзор
+                    @Localizer["CreateReview"]
                </span>
             </a>
         </div>
@@ -23,7 +24,7 @@ else
 {
     @if (Model.currentPage > 0 && Model.currentPage <= Model.pagesCount)
     {
-        <h2 class="text-center">Обзоры пользователя @Model.userName</h2>
+        <h2 class="text-center">@Localizer["UserReviews"] @Model.userName</h2>
     }
 }
 

@@ -331,6 +331,17 @@
         "runtime": {
           "RazorCoursework.dll": {}
         },
+        "resources": {
+          "en/RazorCoursework.resources.dll": {
+            "locale": "en"
+          },
+          "ru/RazorCoursework.resources.dll": {
+            "locale": "ru"
+          },
+          "ru-RU/RazorCoursework.resources.dll": {
+            "locale": "ru-RU"
+          }
+        },
         "compile": {
           "RazorCoursework.dll": {}
         }

@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -13,7 +15,11 @@
     @*<link rel="stylesheet" href="~/css/site.css" />*@
     <style>
         a {
-            color: #656565;
+            color: #8d8d8d;
+        }
+
+        a:hover {
+            color: #d3d3d3;
         }
     </style>
 </head>
@@ -35,20 +41,33 @@
                                    asp-area=""
                                    asp-page="/Home"
                                    asp-route-user="@User.Identity.Name"
-                                   asp-route-p="1">Мои обзоры</a>
+                                   asp-route-p="1">@Localizer["MyReviews"]</a>
                             </li>
                         }
                         <li class="nav-item">
                             <a class="nav-link text-themed"
                                asp-area=""
                                asp-page="/SearchReviews"
-                               asp-route-p="1">Все обзоры</a>
+                               asp-route-p="1">@Localizer["AllReviews"]</a>
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
                                 <button id="btn-switch-theme" class="btn nav-link text-themed" style="outline: none">
-                                    Сменить тему
+                                    @Localizer["SwitchTheme"]
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button id="btn-switch-lang" class="btn nav-link text-themed" style="outline: none">
+                                    @Localizer["SwitchLang"]
+                                </button>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <button id="btn-switch-lang" class="btn nav-link text-themed" style="outline: none">
+                                    @Localizer["AdminConsole"]
                                 </button>
                             </li>
                         }
@@ -123,4 +142,91 @@
             }
         });
     });
+    $('#btn-switch-lang').on("click", function(e) 
+    {
+        e.preventDefault();
+        $.ajax({
+            type: "POST",
+            url: "/Home?handler=SwitchLanguage",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                window.location.href = updateURLParameter(window.location.href, 'culture', response ? 'en-US' : 'ru-RU');
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+    });
+
+    window.addEventListener("load", function (e)
+    {
+        if (window.location.href.indexOf("culture") == -1)
+            {
+                $.ajax({
+                    type: "POST",
+                    url: "/Home?handler=GetLanguage",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("XSRF-TOKEN",
+                            $('input:hidden[name="__RequestVerificationToken"]').val());
+                    },
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        e.preventDefault();
+                        window.location.href = updateURLParameter(window.location.href, 'culture', response ? 'en-US' : 'ru-RU');
+                    },
+                    failure: function (response) {
+                        alert(response);
+                    }
+                });
+            }
+    }, false); 
+
+    function updateURLParameter(url, param, paramVal)
+    {
+        var TheAnchor = null;
+        var newAdditionalURL = "";
+        var tempArray = url.split("?");
+        var baseURL = tempArray[0];
+        var additionalURL = tempArray[1];
+        var temp = "";
+
+        if (additionalURL) 
+        {
+            var tmpAnchor = additionalURL.split("#");
+            var TheParams = tmpAnchor[0];
+                TheAnchor = tmpAnchor[1];
+            if(TheAnchor)
+                additionalURL = TheParams;
+
+            tempArray = additionalURL.split("&");
+
+            for (var i=0; i<tempArray.length; i++)
+            {
+                if(tempArray[i].split('=')[0] != param)
+                {
+                    newAdditionalURL += temp + tempArray[i];
+                    temp = "&";
+                }
+            }        
+        }
+        else
+        {
+            var tmpAnchor = baseURL.split("#");
+            var TheParams = tmpAnchor[0];
+                TheAnchor  = tmpAnchor[1];
+
+            if(TheParams)
+                baseURL = TheParams;
+        }
+
+        if(TheAnchor)
+            paramVal += "#" + TheAnchor;
+
+        var rows_txt = temp + "" + param + "=" + paramVal;
+        return baseURL + "?" + newAdditionalURL + rows_txt;
+    }
 </script>

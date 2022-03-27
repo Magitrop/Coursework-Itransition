@@ -16,6 +16,7 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Dropbox.Api;
 using Azure.Storage.Blobs;
+using Microsoft.Extensions.Localization;
 
 namespace RazorCoursework.Pages
 {
@@ -23,31 +24,33 @@ namespace RazorCoursework.Pages
     public class CreateUserReviewModel : PageModel
     {
         private readonly IWebHostEnvironment _appEnvironment;
-        public CreateUserReviewModel(IWebHostEnvironment appEnvironment)
+        private readonly IStringLocalizer<CreateUserReviewModel> _localizer;
+        public CreateUserReviewModel(
+            IWebHostEnvironment appEnvironment, 
+            IStringLocalizer<CreateUserReviewModel> localizer)
         {
             _appEnvironment = appEnvironment;
+            _localizer = localizer;
         }
 
-        [BindProperty]
-        public InputModel Input { get; set; }
+        [BindProperty] public InputModel Input { get; set; }
 
         public class InputModel
         {
-            [Required(ErrorMessage = "Введите название обзора.")]
-            [Display(Name = "Название")]
+            [Required(ErrorMessage = "SubjectNameError")]
+            [Display(Name = "SubjectName")]
             public string ReviewSubjectName { get; set; }
 
-            [Required(ErrorMessage = "Введите жанр.")]
-            [Display(Name = "Жанр")]
+            [Required(ErrorMessage = "GenreError")]
+            [Display(Name = "Genre")]
             public string ReviewSubjectGenre { get; set; }
 
-            [Required(ErrorMessage = "Введите текст обзора.")]
-            [Display(Name = "Текст обзора")]
+            [Required(ErrorMessage = "ReviewTextError")]
+            [Display(Name = "ReviewText")]
             [DataType(DataType.MultilineText)]
-            //[MinLength(length: 100, ErrorMessage = "Текст обзора должен быть не короче 100 символов.")]
             public string ReviewText { get; set; }
 
-            [Display(Name = "Теги (указываются через запятую)")]
+            [Display(Name = "Tags")]
             public string Tags { get; set; }
         }
 

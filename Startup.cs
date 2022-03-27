@@ -16,6 +16,11 @@ using Microsoft.Extensions.Azure;
 using Azure.Storage.Queues;
 using Azure.Storage.Blobs;
 using Azure.Core.Extensions;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization.Routing;
+using Microsoft.Extensions.Options;
+using System.Reflection;
 
 namespace RazorCoursework
 {
@@ -32,17 +37,42 @@ namespace RazorCoursework
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<LocService>();
+
             Connection = Configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Connection));
             services.AddDbContext<AppContentDbContext>(options => options.UseSqlServer(Connection));
 
-            services.AddDatabaseDeveloperPageExceptionFilter();
-            services.AddDefaultIdentity<IdentityUser>()
+            services
+                .AddDatabaseDeveloperPageExceptionFilter()
+                .AddDefaultIdentity<IdentityUser>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddErrorDescriber<UserErrorsDescriber>();
-            services.AddRazorPages();
+
+            services.AddLocalization(options =>
+            {
+                options.ResourcesPath = "Resources";
+            });
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.SetDefaultCulture("en-US");
+                options.AddSupportedUICultures("en-US", "ru-RU");
+                options.FallBackToParentUICultures = true;
+                options.ApplyCurrentCultureToResponseHeaders = false;
+
+                var provider = options
+                    .RequestCultureProviders
+                    .FirstOrDefault(r => r.GetType() == typeof(AcceptLanguageHeaderRequestCultureProvider));
+                options
+                    .RequestCultureProviders
+                    .Remove(provider);
+            });
+            services
+                .AddRazorPages()
+                .AddViewLocalization()
+                .AddDataAnnotationsLocalization();
 
             services.AddAuthentication()
                 .AddGoogle(googleOptions =>
@@ -112,11 +142,13 @@ namespace RazorCoursework
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSession();
-
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            var localizationOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>().Value;
+            app.UseRequestLocalization(localizationOptions);
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,22 +1,23 @@
 ﻿@page
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
 @model RazorCoursework.Pages.RemoveReviewModel
 @{
 }
 
-<h2>Удаление обзора "@Model.CurrentReviewName"</h2>
+<h2>@Localizer["Header"] "@Model.CurrentReviewName"</h2>
 
 <form id="review" method="post">
     <input type="hidden" name="CurrentReviewId" value="@Model.CurrentReviewId" />
     <div asp-validation-summary="All" class="text-danger"></div>
     <h5>
-        Вы действительно хотите удалить этот обзор?
+        @Localizer["RemoveConfirmQuestion"]
     </h5>
-    <button type="submit" class="btn btn-danger">Удалить обзор</button>
+    <button type="submit" class="btn btn-danger">@Localizer["RemoveConfirm"]</button>
     <a class="btn btn-primary"
        asp-area=""
        asp-page="/Home"
        asp-route-user="@User.Identity.Name"
        asp-route-p="1">
-        Отменить
+        @Localizer["RemoveCancel"]
     </a>
 </form>

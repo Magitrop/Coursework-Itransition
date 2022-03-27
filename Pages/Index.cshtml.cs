@@ -26,8 +26,8 @@ namespace RazorCoursework.Pages
         {
             reviews = new List<ReviewsListWithHeader>()
             {
-                new ReviewsListWithHeader(new List<Review>(), "Последние обзоры пользователей"),
-                new ReviewsListWithHeader(new List<Review>(), "Обзоры с самыми большими оценками")
+                new ReviewsListWithHeader(new List<Review>(), "RecentReviews"),
+                new ReviewsListWithHeader(new List<Review>(), "TopRatedReviews")
             };
             LoadRecentReviews();
             LoadTopRatedReviews();
