@@ -51,23 +51,23 @@ namespace RazorCoursework.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [Display(Name = "Логин")]
+            [Display(Name = "LoginField")]
             public string Name { get; set; }
 
             [Required]
             [EmailAddress]
-            [Display(Name = "Email")]
+            [Display(Name = "EmailField")]
             public string Email { get; set; }
 
             [Required]
-            [StringLength(100, ErrorMessage = "{0} должен быть от {2} до {1} символов в длину.", MinimumLength = 1)]
+            [StringLength(100, ErrorMessage = "PasswordLengthError", MinimumLength = 1)]
             [DataType(DataType.Password)]
-            [Display(Name = "Пароль")]
+            [Display(Name = "PasswordField")]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = "Повторите пароль")]
-            [Compare("Password", ErrorMessage = "Пароли не совпадают.")]
+            [Display(Name = "ConfirmPasswordField")]
+            [Compare("Password", ErrorMessage = "ConfirmPasswordError")]
             public string ConfirmPassword { get; set; }
         }
 

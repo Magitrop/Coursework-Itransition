@@ -338,6 +338,9 @@
           "ru/RazorCoursework.resources.dll": {
             "locale": "ru"
           },
+          "en-US/RazorCoursework.resources.dll": {
+            "locale": "en-US"
+          },
           "ru-RU/RazorCoursework.resources.dll": {
             "locale": "ru-RU"
           }

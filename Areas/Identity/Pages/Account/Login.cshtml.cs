@@ -43,15 +43,15 @@ namespace RazorCoursework.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [Display(Name = "Логин")]
+            [Display(Name = "LoginField")]
             public string Name { get; set; }
 
             [Required]
             [DataType(DataType.Password)]
-            [Display(Name = "Пароль")]
+            [Display(Name = "PasswordField")]
             public string Password { get; set; }
 
-            [Display(Name = "Запомнить меня")]
+            [Display(Name = "RememberMe")]
             public bool RememberMe { get; set; }
         }
 

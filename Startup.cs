@@ -57,17 +57,10 @@ namespace RazorCoursework
             });
             services.Configure<RequestLocalizationOptions>(options =>
             {
-                options.SetDefaultCulture("en-US");
+                options.SetDefaultCulture("ru-RU");
                 options.AddSupportedUICultures("en-US", "ru-RU");
                 options.FallBackToParentUICultures = true;
                 options.ApplyCurrentCultureToResponseHeaders = false;
-
-                var provider = options
-                    .RequestCultureProviders
-                    .FirstOrDefault(r => r.GetType() == typeof(AcceptLanguageHeaderRequestCultureProvider));
-                options
-                    .RequestCultureProviders
-                    .Remove(provider);
             });
             services
                 .AddRazorPages()

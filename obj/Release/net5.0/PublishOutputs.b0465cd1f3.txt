@@ -1,7 +1,10 @@
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\RazorCoursework.exe
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\css\site.css
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\favicon.ico
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\files\6f15284a-8f49-4b5e-b670-6c18f1b0969e_WarRobots_sample.jpg
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\js\attach.image.js
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\js\site.js
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\js\tags.input.js
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\lib\amsify-suggestags\.gitattributes
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\lib\amsify-suggestags\css\amsify.suggestags.css
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\lib\amsify-suggestags\examples\bootstrap\index.html
@@ -70,6 +73,10 @@ C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransiti
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\RazorCoursework.dll
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\RazorCoursework.runtimeconfig.json
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\RazorCoursework.pdb
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\en\RazorCoursework.resources.dll
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\ru\RazorCoursework.resources.dll
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\en-US\RazorCoursework.resources.dll
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\ru-RU\RazorCoursework.resources.dll
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\Azure.Core.dll
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\Azure.Extensions.AspNetCore.Configuration.Secrets.dll
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\Azure.Identity.dll

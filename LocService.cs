@@ -17,7 +17,6 @@ namespace RazorCoursework
 
         public LocalizedString GetLocalizedHtmlString(string key)
         {
-            var a = _localizer[key];
             return _localizer[key];
         }
     }
