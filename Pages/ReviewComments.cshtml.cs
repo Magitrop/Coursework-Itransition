@@ -19,16 +19,11 @@ namespace RazorCoursework.Pages
 
         public IActionResult OnGet(string id)
         {
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                Review = context.Reviews
-                    .Include(r => r.TagRelations)
-                    .ThenInclude(r => r.Tag)
-                    .FirstOrDefault(r => r.ReviewID == id);
-            }
+            using var context = AppContentDbContext.Create();
+            Review = context.Reviews
+                .Include(r => r.TagRelations)
+                .ThenInclude(r => r.Tag)
+                .FirstOrDefault(r => r.ReviewID == id);
             if (Review == null)
                 return NotFound();
 
@@ -39,207 +34,146 @@ namespace RazorCoursework.Pages
 
         public bool CheckUserOwnership()
         {
-            bool result;
-            using (var context = new ApplicationDbContext(
-                   new DbContextOptionsBuilder<ApplicationDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-                result = User.Identity.IsAuthenticated && (Review.ReviewCreatorID == currentUserID || User.IsInRole("Admin"));
-            }
-            return result;
+            using var context = AppContentDbContext.Create();
+            string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            return User.Identity.IsAuthenticated && (Review.ReviewCreatorID == currentUserID || User.IsInRole("Admin"));
         }
 
         public async Task<IActionResult> OnPostLike()
         {
-            MemoryStream stream = new MemoryStream();
-            await Request.Body.CopyToAsync(stream);
-            stream.Position = 0;
+            using StreamReader reader = new StreamReader(await CreateMemoryStreamFromRequest());
+            using var context = AppContentDbContext.Create();
+
             string reviewID = string.Empty;
             bool alreadyLiked = false;
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                reviewID = await reader.ReadToEndAsync();
-                using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
+
+            reviewID = await reader.ReadToEndAsync();
+            var currentReview = await context.Reviews.FirstOrDefaultAsync(r => r.ReviewID == reviewID);
+            if (currentReview != null)
+            {   
+                string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                Like like = await context.ReviewLikes
+                    .FirstOrDefaultAsync(l =>
+                    l.ReviewID == currentReview.ReviewID &&
+                    l.UserID == currentUserID);
+                if (alreadyLiked = like == null)
                 {
-                    var reviews = context.Reviews
-                        .Include(r => r.Likes)
-                        .Include(r => r.Ratings)
-                        .Include(r => r.TagRelations)
-                        .ThenInclude(r => r.Tag);
-                    var currentReview = await reviews.FirstOrDefaultAsync(r => r.ReviewID == reviewID);
-                    if (currentReview != null)
+                    like = new Like()
                     {
-                        string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-                        Like like = await context.ReviewLikes
-                            .FirstOrDefaultAsync(l =>
-                            l.ReviewID == currentReview.ReviewID &&
-                            l.UserID == currentUserID);
-                        if (alreadyLiked = like == null)
-                        {
-                            like = new Like()
-                            {
-                                Review = currentReview,
-                                UserID = currentUserID
-                            };
-                            await context.ReviewLikes.AddAsync(like);
-                        }
-                        else
-                            context.ReviewLikes.Remove(like);
-                        await context.SaveChangesAsync();
-                    }
+                        Review = currentReview,
+                        UserID = currentUserID
+                    };
+                    await context.ReviewLikes.AddAsync(like);
                 }
+                else
+                    context.ReviewLikes.Remove(like);
+                await context.SaveChangesAsync();
             }
             return new JsonResult(GetLikesCount(reviewID).ToString() + ';' + (!alreadyLiked).ToString());
         }
 
         public async Task<IActionResult> OnPostRating()
         {
-            MemoryStream stream = new MemoryStream();
-            await Request.Body.CopyToAsync(stream);
-            stream.Position = 0;
-            string reviewID = string.Empty;
+            using StreamReader reader = new StreamReader(await CreateMemoryStreamFromRequest());
+            using var context = AppContentDbContext.Create();
+
             bool shouldRemoveRating = false;
-            using (StreamReader reader = new StreamReader(stream))
+            var data = (await reader.ReadToEndAsync()).Split(';');
+            string reviewID = data[0];
+            int.TryParse(data[1], out int ratingValue);
+
+            var currentReview = await context.Reviews.FirstOrDefaultAsync(r => r.ReviewID == reviewID);
+            if (currentReview != null)
             {
-                var data = (await reader.ReadToEndAsync()).Split(';');
-                reviewID = data[0];
-                int ratingValue = int.Parse(data[1]);
-                using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-                {
-                    var reviews = context.Reviews
-                        .Include(r => r.Likes)
-                        .Include(r => r.Ratings)
-                        .Include(r => r.TagRelations)
-                        .ThenInclude(r => r.Tag);
-                    var currentReview = await reviews.FirstOrDefaultAsync(r => r.ReviewID == reviewID);
-                    if (currentReview != null)
-                    {
-                        string currentUserID = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
-                        Rating rating = await context.ReviewRatings
-                            .FirstOrDefaultAsync(l =>
-                                l.ReviewID == currentReview.ReviewID &&
-                                l.UserID == currentUserID);
-                        if (rating == null)
-                        {
-                            rating = new Rating()
-                            {
-                                Review = currentReview,
-                                UserID = currentUserID,
-                                RatingValue = ratingValue
-                            };
-                            await context.ReviewRatings.AddAsync(rating);
-                        }
-                        else if (shouldRemoveRating = rating.RatingValue == ratingValue)
-                            context.ReviewRatings.Remove(rating);
-                        else
-                            rating.RatingValue = ratingValue;
-                        await context.SaveChangesAsync();
-                    }
-                }
+                string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                shouldRemoveRating = await ChangeRating(context, currentReview, currentUserID, ratingValue);
             }
             return new JsonResult(shouldRemoveRating.ToString() + ";" + GetAverageRating(reviewID).ToString());
         }
 
+        private async Task<MemoryStream> CreateMemoryStreamFromRequest()
+        {
+            MemoryStream stream = new MemoryStream();
+            await Request.Body.CopyToAsync(stream);
+            stream.Position = 0;
+            return stream;
+        }
+
+        private async Task<bool> ChangeRating(AppContentDbContext context, Review currentReview, string currentUserID, int ratingValue)
+        {
+            bool shouldRemoveRating = false;
+            Rating rating = await context.ReviewRatings
+                    .FirstOrDefaultAsync(l =>
+                        l.ReviewID == currentReview.ReviewID &&
+                        l.UserID == currentUserID);
+            if (rating == null)
+            {
+                rating = new Rating()
+                {
+                    Review = currentReview,
+                    UserID = currentUserID,
+                    RatingValue = ratingValue
+                };
+                await context.ReviewRatings.AddAsync(rating);
+            }
+            else if (shouldRemoveRating = rating.RatingValue == ratingValue)
+                context.ReviewRatings.Remove(rating);
+            else
+                rating.RatingValue = ratingValue;
+            await context.SaveChangesAsync();
+            return shouldRemoveRating;
+        }
+
         public bool AlreadyLikedReview(string reviewID)
         {
-            bool result = true;
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                string currentUserID = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
-                result = context.ReviewLikes.Any(like =>
-                    like.UserID == currentUserID &&
-                    like.ReviewID == reviewID);
-            }
-            return result;
+            using var context = AppContentDbContext.Create();
+            string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            return context.ReviewLikes.Any(like =>
+                like.UserID == currentUserID &&
+                like.ReviewID == reviewID);
         }
 
         public int GetLikesCount(string reviewID)
         {
-            int result = 0;
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                result = context.ReviewLikes.Where(like => like.ReviewID == reviewID).Count();
-            }
-            return result;
+            using var context = AppContentDbContext.Create();
+            return context.ReviewLikes.Where(like => like.ReviewID == reviewID).Count();
         }
 
         public int GetRating(string reviewID)
         {
-            int result;
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-                result = context.ReviewRatings.Where(rating =>
+            using var context = AppContentDbContext.Create();
+            string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            return context.ReviewRatings.Where(rating =>
                     rating.ReviewID == reviewID &&
                     rating.UserID == currentUserID).FirstOrDefault()?.RatingValue ?? 0;
-            }
-            return result;
         }
 
         public int GetAuthorRating(string reviewID)
         {
-            int result;
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                string authorID = Review.ReviewCreatorID;
-                result = context.ReviewRatings.Where(rating =>
+            using var context = AppContentDbContext.Create();
+            string authorID = Review.ReviewCreatorID;
+            return context.ReviewRatings.Where(rating =>
                     rating.ReviewID == reviewID &&
                     rating.UserID == authorID).FirstOrDefault()?.RatingValue ?? 0;
-            }
-            return result;
         }
 
         public double GetAverageRating(string reviewID)
         {
-            double result;
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-                var ratings = context.ReviewRatings
-                    .Where(rating => rating.ReviewID == reviewID);
-                double count = ratings.Count();
-                if (count == 0)
-                    result = 0;
-                else result = Math.Round(ratings.Sum(rating => rating.RatingValue) / count, 3);
-            }
-            return result;
+            using var context = AppContentDbContext.Create();
+            string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var ratings = context.ReviewRatings.Where(rating => rating.ReviewID == reviewID);
+            double count = ratings.Count();
+            if (count == 0) 
+                return 0;
+            else 
+                return Math.Round(ratings.Sum(rating => rating.RatingValue) / count, 3);
         }
 
         public int GetCreatorLikesCount(string userID)
         {
-            int result = 0;
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                var creatorReviews = context.Reviews.Where(r => r.ReviewCreatorID == userID);
-                result = context.ReviewLikes.Where(like => creatorReviews.Any(r => r.ReviewID == like.ReviewID)).Count();
-            }
-            return result;
+            using var context = AppContentDbContext.Create();
+            var creatorReviews = context.Reviews.Where(r => r.ReviewCreatorID == userID);
+            return context.ReviewLikes.Where(like => creatorReviews.Any(r => r.ReviewID == like.ReviewID)).Count();
         }
     }
 }

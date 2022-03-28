@@ -13,155 +13,104 @@ namespace RazorCoursework.Pages
 {
     public class SearchReviewsModel : PageModel
     {
-        public List<ReviewsListWithHeader> reviews { get; set; }
+        public List<ReviewsListWithHeader> reviews { get; set; } = 
+            new()
+            {
+                new(new(), string.Empty),
+            };
         public int reviewsPerPage { get; set; } = 10;
-        public string currentSearchCondition { get; set; }
         public string currentTag { get; set; }
         public int currentPage { get; set; }
         public int pagesCount { get; set; }
 
-        public void OnGet(string search, string tag, int p)
+        public void OnGet(string tag, int p)
         {
-            reviews = new List<ReviewsListWithHeader>()
-            {
-                new ReviewsListWithHeader(new List<Review>(), string.Empty),
-            };
-
-            currentSearchCondition = search ?? string.Empty;
-            if (currentSearchCondition == string.Empty)
-                currentTag = tag ?? string.Empty;
-
+            currentTag = tag ?? string.Empty;
             if (IsPageCorrect(p))
                 LoadReviews();
         }
 
-        private bool IsPageCorrect(int p)
-        {
-            currentPage = p;
-            return p >= 1;
-        }
+        private bool IsPageCorrect(int p) => (currentPage = p) >= 1;
 
         private void LoadReviews()
         {
-            if (currentSearchCondition != string.Empty)
-                LoadReviewsWithText();
-            else if (currentTag != string.Empty)
+            if (currentTag != string.Empty)
                 LoadReviewsWithTag();
             else LoadAllReviews();
         }
 
         private void LoadReviewsWithTag()
         {
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                var all = context.ReviewAndTagRelations
-                    .Include(r => r.Review)
-                    .ThenInclude(r => r.TagRelations)
-                    .ThenInclude(t => t.Tag)
-                    .Where(r => r.Tag.TagName == currentTag);
-
-                reviews[0].list = all
-                    .Select(r => r.Review)
-                    .OrderByDescending(t => t.CreationDate)
-                    .Skip((currentPage - 1) * reviewsPerPage)
-                    .Take(reviewsPerPage)
-                    .ToList();
-                
-                double reviewsDividedByPages = all.Count() / (double)reviewsPerPage;
-                pagesCount = (int)Math.Ceiling(reviewsDividedByPages);
-            }
+            using var context = AppContentDbContext.Create();
+            var all = GetRelations(context);
+            TakeReviewsWithRelations(all);
+            pagesCount = (int)Math.Ceiling(all.Count() / (double)reviewsPerPage);
         }
 
-        private void LoadReviewsWithText()
+        private IQueryable<UserReviewAndTagRelation> GetRelations(AppContentDbContext context)
         {
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                var all = context.ReviewAndTagRelations
-                    .Include(r => r.Review)
-                    .ThenInclude(r => r.TagRelations)
-                    .ThenInclude(t => t.Tag)
-                    .Select(r => r.Review)
-                    .Where(r => EF.Functions.FreeText(r.ReviewText, currentSearchCondition));
+            return context.ReviewAndTagRelations
+                .Include(r => r.Review)
+                .ThenInclude(r => r.TagRelations)
+                .ThenInclude(t => t.Tag)
+                .Where(r => r.Tag.TagName == currentTag);
+        }
 
-                reviews[0].list = all
-                    .OrderByDescending(t => t.CreationDate)
-                    .Skip((currentPage - 1) * reviewsPerPage)
-                    .Take(reviewsPerPage)
-                    .ToList();
+        private void TakeReviewsWithRelations(IQueryable<UserReviewAndTagRelation> allReviews)
+        {
+            reviews[0].list = allReviews
+                .Select(r => r.Review)
+                .OrderByDescending(t => t.CreationDate)
+                .Skip((currentPage - 1) * reviewsPerPage)
+                .Take(reviewsPerPage)
+                .ToList();
+        }
 
-                double reviewsDividedByPages = all.Count() / (double)reviewsPerPage;
-                pagesCount = (int)Math.Ceiling(reviewsDividedByPages);
-            }
+        private void TakeAllReviews(AppContentDbContext context)
+        {
+            reviews[0].list =
+                context.Reviews
+                .Include(r => r.TagRelations)
+                .ThenInclude(r => r.Tag)
+                .OrderByDescending(r => r.CreationDate)
+                .Skip((currentPage - 1) * reviewsPerPage)
+                .Take(reviewsPerPage)
+                .ToList();
         }
 
         private void LoadAllReviews()
         {
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                reviews[0].list =
-                    context.Reviews
-                    .Include(r => r.TagRelations)
-                    .ThenInclude(r => r.Tag)
-                    .OrderByDescending(r => r.CreationDate)
-                    .Skip((currentPage - 1) * reviewsPerPage)
-                    .Take(reviewsPerPage)
-                    .ToList();
+            using var context = AppContentDbContext.Create();
+            TakeAllReviews(context);
+            CalculatePagesCount(context);
+        }
 
-                double reviewsDividedByPages = context.Reviews.Count() / (double)reviewsPerPage;
-                pagesCount = (int)Math.Ceiling(reviewsDividedByPages);
-            }
+        private void CalculatePagesCount(AppContentDbContext context)
+        {
+            double reviewsDividedByPages = context.Reviews.Count() / (double)reviewsPerPage;
+            pagesCount = (int)Math.Ceiling(reviewsDividedByPages);
         }
 
         public bool AlreadyLikedReview(string reviewID)
         {
-            bool result = true;
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                string currentUserID = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
-                result = context.ReviewLikes.Any(like =>
-                    like.UserID == currentUserID &&
-                    like.ReviewID == reviewID);
-            }
-            return result;
+            using var context = AppContentDbContext.Create();
+            string currentUserID = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            return context.ReviewLikes.Any(like =>
+                like.UserID == currentUserID &&
+                like.ReviewID == reviewID);
         }
 
         public int GetLikesCount(string reviewID)
         {
-            int result = 0;
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                result = context.ReviewLikes.Where(like => like.ReviewID == reviewID).Count();
-            }
-            return result;
+            using var context = AppContentDbContext.Create();
+            return context.ReviewLikes.Where(like => like.ReviewID == reviewID).Count();
         }
 
         public int GetCreatorLikesCount(string userID)
         {
-            int result = 0;
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                var creatorReviews = context.Reviews.Where(r => r.ReviewCreatorID == userID);
-                result = context.ReviewLikes.Where(like => creatorReviews.Any(r => r.ReviewID == like.ReviewID)).Count();
-            }
-            return result;
+            using var context = AppContentDbContext.Create();
+            var creatorReviews = context.Reviews.Where(r => r.ReviewCreatorID == userID);
+            return context.ReviewLikes.Where(like => creatorReviews.Any(r => r.ReviewID == like.ReviewID)).Count();
         }
     }
 }

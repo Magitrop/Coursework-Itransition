@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using RazorCoursework.Data;
 
 namespace RazorCoursework.Pages
@@ -20,50 +21,44 @@ namespace RazorCoursework.Pages
 
         public IActionResult OnGet(string id)
         {
+            using var context = AppContentDbContext.Create();
+            var currentReview = GetReviewByID(context, id);
             CurrentReviewId = id;
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                var currentReview = context.Reviews
-                    .Include(r => r.TagRelations)
-                    .ThenInclude(r => r.Tag)
-                    .FirstOrDefault(r => r.ReviewID == id);
-                CurrentReviewName = currentReview.ReviewSubjectName;
-                string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-                bool checkUserOwnership = User.Identity.IsAuthenticated && (currentReview?.ReviewCreatorID == currentUserID || User.IsInRole("Admin"));
-                if (!checkUserOwnership)
-                    return RedirectToPage("/Home", new { user = User.Identity.Name, p = 1 });
-            }
+            CurrentReviewName = currentReview.ReviewSubjectName;
+            return CheckUserOwnership(currentReview);
+        }
 
+        private Review GetReviewByID(AppContentDbContext context, string id) => 
+            context.Reviews
+                .Include(r => r.TagRelations)
+                .ThenInclude(r => r.Tag)
+                .FirstOrDefault(r => r.ReviewID == id);
+
+        private IActionResult CheckUserOwnership(Review currentReview)
+        {
+            string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (!User.Identity.IsAuthenticated &&
+                (currentReview?.ReviewCreatorID == currentUserID || User.IsInRole("Admin")))
+                return RedirectToPage("/Home", new { user = User.Identity.Name, p = 1 });
             return Page();
         }
 
         public IActionResult OnPost()
         {
+            using var context = AppContentDbContext.Create();
             if (ModelState.IsValid)
-            {
-                using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-                {
-                    var reviews = context.Reviews
-                        .Include(r => r.Likes)
-                        .Include(r => r.Ratings)
-                        .Include(r => r.TagRelations)
-                        .ThenInclude(r => r.Tag);
-                    var currentReview = reviews.FirstOrDefault(r => r.ReviewID == Request.Form["CurrentReviewId"].ToString());
-                    if (currentReview != null)
-                    {
-                        context.Reviews.Remove(currentReview);
-                        context.SaveChanges();
-                    }
-                }
-            }
-
+                RemoveReview(context, Request.Form["CurrentReviewId"].ToString());
             return RedirectToPage("/Home", new { user = User.Identity.Name, p = 1 });
+        }
+
+        private void RemoveReview(AppContentDbContext context, string id)
+        {
+            var currentReview = context.Reviews.FirstOrDefault(r => r.ReviewID == id);
+            if (currentReview != null)
+            {
+                context.Reviews.Remove(currentReview);
+                context.SaveChanges();
+            }
         }
     }
 }

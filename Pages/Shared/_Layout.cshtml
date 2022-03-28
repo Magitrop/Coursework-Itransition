@@ -48,7 +48,9 @@
                             <a class="nav-link text-themed"
                                asp-area=""
                                asp-page="/SearchReviews"
-                               asp-route-p="1">@Localizer["AllReviews"]</a>
+                               asp-route-p="1">
+                                @Localizer["AllReviews"]
+                               </a>
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
@@ -66,9 +68,12 @@
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <button id="btn-switch-lang" class="btn nav-link text-themed" style="outline: none">
+                                <a class="nav-link text-themed"
+                                   asp-area=""
+                                   asp-page="/Admin"
+                                   asp-route-p="1">
                                     @Localizer["AdminConsole"]
-                                </button>
+                                   </a>
                             </li>
                         }
                     </ul>

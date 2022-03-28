@@ -26,202 +26,123 @@ namespace RazorCoursework.Pages
         }
     }
 
-    [Authorize]
     public class HomeModel : PageModel
     {
-        public List<ReviewsListWithHeader> reviews { get; set; }
+        public List<ReviewsListWithHeader> reviews { get; set; } = 
+            new()
+            {
+                new(new(), string.Empty),
+            };
         public string userName { get; set; }
         public int reviewsPerPage { get; set; } = 10;
         public string currentTag { get; set; }
         public int currentPage { get; set; }
         public int pagesCount { get; set; }
 
+        public ApplicationDbContext applicationContext;
+        public AppContentDbContext contentContext;
+
+        public HomeModel(ApplicationDbContext _applicationContext, AppContentDbContext _contentContext)
+        {
+            applicationContext = _applicationContext;
+            contentContext = _contentContext;
+        }
+
         public void OnGet(string user, int p)
         {
-            reviews = new List<ReviewsListWithHeader>()
-            {
-                new ReviewsListWithHeader(new List<Review>(), string.Empty),
-            };
             userName = user;
             if (IsPageCorrect(p))
                 LoadReviews();
         }
 
-        private bool IsPageCorrect(int p)
-        {
-            currentPage = p;
-            return p >= 1;
-        }
+        private bool IsPageCorrect(int p) => (currentPage = p) >= 1;
 
         private void LoadReviews()
         {
-            string creatorID;
-            using (var context = new ApplicationDbContext(
-                   new DbContextOptionsBuilder<ApplicationDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                creatorID = context.Users.FirstOrDefault(u => u.UserName == userName)?.Id ?? string.Empty;
-            }
-
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                reviews[0].list = (from t in context.Reviews.Include(r => r.TagRelations).ThenInclude(r => r.Tag)
-                             where t.ReviewCreatorID == creatorID
-                             orderby t.CreationDate descending
-                             select t).ToList();
-
-                double reviewsDividedByPages = reviews[0].list.Count() / (double)reviewsPerPage;
-                pagesCount = (int)Math.Ceiling(reviewsDividedByPages);
-
-                reviews[0].list = reviews[0].list
-                    .Skip((currentPage - 1) * reviewsPerPage)
-                    .Take(reviewsPerPage)
-                    .ToList();
-            }
+            GetOwnReviews();
+            CalculatePagesCount();
+            TakeReviewsForPage();
         }
 
-        public bool AlreadyLikedReview(string reviewID)
+        private void GetOwnReviews()
         {
-            bool result = true;
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-                result = context.ReviewLikes.Any(like =>
-                    like.UserID == currentUserID &&
-                    like.ReviewID == reviewID);
-            }
-            return result;
+            string creatorID = applicationContext.Users.FirstOrDefault(u => u.UserName == userName)?.Id ?? string.Empty;
+            reviews[0].list = (from t in contentContext.Reviews.Include(r => r.TagRelations).ThenInclude(r => r.Tag)
+                               where t.ReviewCreatorID == creatorID
+                               orderby t.CreationDate descending
+                               select t).ToList();
         }
 
-        public int GetLikesCount(string reviewID)
+        private void CalculatePagesCount()
         {
-            int result = 0;
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                result = context.ReviewLikes.Where(like => like.ReviewID == reviewID).Count();
-            }
-            return result;
+            double reviewsDividedByPages = reviews[0].list.Count() / (double)reviewsPerPage;
+            pagesCount = (int)Math.Ceiling(reviewsDividedByPages);
+        }
+
+        private void TakeReviewsForPage()
+        {
+            reviews[0].list = reviews[0].list
+                .Skip((currentPage - 1) * reviewsPerPage)
+                .Take(reviewsPerPage)
+                .ToList();
         }
 
         public int GetCreatorLikesCount(string userID)
         {
-            int result = 0;
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                var creatorReviews = context.Reviews.Where(r => r.ReviewCreatorID == userID);
-                result = context.ReviewLikes.Where(like => creatorReviews.Any(r => r.ReviewID == like.ReviewID)).Count();
-            }
-            return result;
+            var creatorReviews = contentContext.Reviews.Where(r => r.ReviewCreatorID == userID);
+            return contentContext.ReviewLikes.Where(like => creatorReviews.Any(r => r.ReviewID == like.ReviewID)).Count();
         }
 
         public IActionResult OnPostUserPreferences()
         {
-            UserPreferences preferences;
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-                if (User.Identity.IsAuthenticated)
-                {
-                    preferences = context.UserPreferences.FirstOrDefault(p => p.UserID == currentUserID);
-                    if (preferences == null)
-                    {
-                        context.UserPreferences.Add(preferences = new UserPreferences()
-                        {
-                            UserID = currentUserID
-                        });
-                        context.SaveChanges();
-                    }
-                }
-                else preferences = new UserPreferences();
-            }
+            using var context = AppContentDbContext.Create();
+            UserPreferences preferences = GetPreferencesOrDefault(context);
+            context.SaveChanges();
             return new JsonResult(preferences.IsDarkTheme + ";" + preferences.IsEnglishVersion);
         }
 
-        public async Task<IActionResult> OnPostSwitchTheme()
+        private UserPreferences GetPreferencesOrDefault(AppContentDbContext context)
         {
-            UserPreferences preferences;
-            bool isLightTheme;
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-                if (User.Identity.IsAuthenticated)
-                {
-                    preferences = await context.UserPreferences.FirstOrDefaultAsync(p => p.UserID == currentUserID);
-                    if (preferences == null)
-                        await context.UserPreferences.AddAsync(preferences = new UserPreferences()
-                        {
-                            UserID = currentUserID
-                        });
-                }
-                else preferences = new UserPreferences();
-
-                isLightTheme = preferences.IsDarkTheme = !preferences.IsDarkTheme;
-                context.SaveChanges();
-            }
-            return new JsonResult(isLightTheme);
+            string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (User.Identity.IsAuthenticated)
+                return GetPreferences(context, currentUserID);
+            else return new UserPreferences();
         }
 
-        public async Task<IActionResult> OnPostSwitchLanguage()
+        private UserPreferences GetPreferences(AppContentDbContext context, string currentUserID)
         {
-            UserPreferences preferences;
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-                if (User.Identity.IsAuthenticated)
+            var preferences = context.UserPreferences.FirstOrDefault(p => p.UserID == currentUserID);
+            if (preferences == null)
+                context.UserPreferences.Add(preferences = new UserPreferences()
                 {
-                    preferences = await context.UserPreferences.FirstOrDefaultAsync(p => p.UserID == currentUserID);
-                    if (preferences == null)
-                        await context.UserPreferences.AddAsync(preferences = new UserPreferences()
-                        {
-                            UserID = currentUserID
-                        });
-                }
-                else preferences = new UserPreferences();
+                    UserID = currentUserID
+                });
+            return preferences;
+        }
 
-                LocService.isEnglishVersion = preferences.IsEnglishVersion = !preferences.IsEnglishVersion;
-                context.SaveChanges();
-            }
+        public IActionResult OnPostSwitchTheme()
+        {
+            using var context = AppContentDbContext.Create();
+            UserPreferences preferences = GetPreferencesOrDefault(context);
+            preferences.IsDarkTheme = !preferences.IsDarkTheme;
+            context.SaveChanges();
+            return new JsonResult(preferences.IsDarkTheme);
+        }
+
+        public IActionResult OnPostSwitchLanguage()
+        {
+            using var context = AppContentDbContext.Create();
+            UserPreferences preferences = GetPreferencesOrDefault(context);
+            LocService.isEnglishVersion = preferences.IsEnglishVersion = !preferences.IsEnglishVersion;
+            context.SaveChanges();
             return new JsonResult(LocService.isEnglishVersion);
         }
 
-        public async Task<IActionResult> OnPostGetLanguage()
+        public IActionResult OnPostGetLanguage()
         {
-            UserPreferences preferences;
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                string currentUserID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-                if (User.Identity.IsAuthenticated)
-                    preferences = await context.UserPreferences.FirstOrDefaultAsync(p => p.UserID == currentUserID);
-                else preferences = new UserPreferences();
-
-                LocService.isEnglishVersion = preferences.IsEnglishVersion;
-            }
-            return new JsonResult(LocService.isEnglishVersion);
+            using var context = AppContentDbContext.Create();
+            UserPreferences preferences = GetPreferencesOrDefault(context);
+            return new JsonResult(LocService.isEnglishVersion = preferences.IsEnglishVersion);
         }
     }
 }

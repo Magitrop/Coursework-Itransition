@@ -17,43 +17,23 @@ namespace RazorCoursework.Pages
 
         public async Task<IActionResult> OnGet()
         {
-            using (var context = new ApplicationDbContext(
-                  new DbContextOptionsBuilder<ApplicationDbContext>()
-                  .UseSqlServer(Startup.Connection)
-                  .Options))
-            {
-                users = await context.Users.ToListAsync();
-            }
-
+            using var context = ApplicationDbContext.Create();
+            users = await context.Users.ToListAsync();
             return Page();
         }
 
         public int GetCreatorLikesCount(string userID)
         {
-            int result = 0;
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                var creatorReviews = context.Reviews.Where(r => r.ReviewCreatorID == userID);
-                result = context.ReviewLikes.Where(like => creatorReviews.Any(r => r.ReviewID == like.ReviewID)).Count();
-            }
-            return result;
+            using var context = AppContentDbContext.Create();
+            var creatorReviews = context.Reviews.Where(r => r.ReviewCreatorID == userID);
+            return context.ReviewLikes.Where(like => creatorReviews.Any(r => r.ReviewID == like.ReviewID)).Count();
         }
 
         public string GetRole(string userID)
         {
-            string result;
-            using (var context = new ApplicationDbContext(
-                   new DbContextOptionsBuilder<ApplicationDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                var roleId = context.UserRoles.FirstOrDefault(r => r.UserId == userID)?.RoleId;
-                result = GetRoleScreenName(context.Roles.FirstOrDefault(r => r.Id == roleId)?.Name);
-            }
-            return result;
+            using var context = ApplicationDbContext.Create();
+            var roleId = context.UserRoles.FirstOrDefault(r => r.UserId == userID)?.RoleId;
+            return GetRoleScreenName(context.Roles.FirstOrDefault(r => r.Id == roleId)?.Name);
         }
 
         public string GetRoleScreenName(string roleRawName) => 

@@ -1,7 +1,6 @@
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\RazorCoursework.exe
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\css\site.css
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\favicon.ico
-C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\files\6f15284a-8f49-4b5e-b670-6c18f1b0969e_WarRobots_sample.jpg
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\js\attach.image.js
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\js\site.js
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\js\tags.input.js
@@ -68,6 +67,11 @@ C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransiti
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\lib\markdown-editor\src\css\simplemde.css
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\lib\markdown-editor\src\js\codemirror\tablist.js
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\lib\markdown-editor\src\js\simplemde.js
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\lib\tag-cloud\index.html
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\lib\tag-cloud\jquery.tagcloud.js
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\lib\tag-cloud\LICENSE
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\lib\tag-cloud\package.json
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\wwwroot\lib\tag-cloud\README.md
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\appsettings.Development.json
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\appsettings.json
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Release\net5.0\PubTmp\Out\RazorCoursework.dll

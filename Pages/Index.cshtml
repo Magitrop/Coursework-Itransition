@@ -1,7 +1,34 @@
 ﻿@page
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
 @model IndexModel
 @{
 
 }
 
 <partial name="_ShowReviewsPartial" />
+<hr />
+
+<h2 class="text-center">
+    @Localizer["TagCloud"]
+</h2>
+<div id="tagcloud" class="text-center">
+    @foreach (var t in Model.tags)
+    {
+        <a
+            asp-page="SearchReviews"
+            asp-route-tag="@t.TagName"
+            asp-route-p="1"
+            rel="@t.TagQuantity"
+            style="margin: 10px">
+            <span class="d-inline-block">@t.TagName</span>
+        </a>
+    }
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="/lib/tag-cloud/jquery.tagcloud.js"></script>
+<script>
+    $("#tagcloud a").tagcloud({
+        size: {start: 12, end: 36, unit: "px"}
+    });
+</script>

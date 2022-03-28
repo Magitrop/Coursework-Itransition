@@ -2335,3 +2335,14 @@ C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransiti
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Debug\net5.0\RazorCoursework.Resources.Areas.Identity.Pages.Account.Register.ru.resources
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Debug\net5.0\RazorCoursework.Resources.Areas.Identity.Pages.Account.RegisterModel+InputModel.en.resources
 C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Debug\net5.0\RazorCoursework.Resources.Areas.Identity.Pages.Account.RegisterModel+InputModel.ru.resources
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Debug\net5.0\Razor\Areas\Identity\Pages\Account\Logout.cshtml.g.cs
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Debug\net5.0\Razor\Areas\Identity\Pages\Account\RegisterConfirmation.cshtml.g.cs
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Debug\net5.0\Razor\Areas\Identity\Pages\Account\ExternalLogin.cshtml.g.cs
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Debug\net5.0\Razor\Areas\Identity\Pages\Account\Manage\_ManageNav.cshtml.g.cs
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Debug\net5.0\Razor\Areas\Identity\Pages\Account\Manage\_ViewImports.cshtml.g.cs
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Debug\net5.0\RazorCoursework.Resources.Areas.Identity.Pages.Account.ExternalLogin.en.resources
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Debug\net5.0\RazorCoursework.Resources.Areas.Identity.Pages.Account.ExternalLogin.ru.resources
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Debug\net5.0\RazorCoursework.Resources.Areas.Identity.Pages.Account.ExternalLoginModel+InputModel.en.resources
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Debug\net5.0\RazorCoursework.Resources.Areas.Identity.Pages.Account.ExternalLoginModel+InputModel.ru.resources
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Debug\net5.0\RazorCoursework.Resources.Pages.Index.en.resources
+C:\Users\Schweppes_psina\Desktop\Проекты\C# Projects\Coursework-Itransition\obj\Debug\net5.0\RazorCoursework.Resources.Pages.Index.ru.resources

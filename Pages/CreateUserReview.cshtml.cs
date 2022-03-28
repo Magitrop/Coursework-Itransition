@@ -56,80 +56,68 @@ namespace RazorCoursework.Pages
 
         public async Task<IActionResult> OnPostTags()
         {
-            string[] result = new string[0];
-            using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
-            {
-                result = await (from t in context.Tags
-                         where t.TagName.StartsWith(Request.Form["term"])
-                         select t.TagName)
-                         .Take(10)
-                         .ToArrayAsync();
-            }
+            using var context = AppContentDbContext.Create();
+            string[] result = Array.Empty<string>();
+            result = await (from t in context.Tags
+                            where t.TagName.StartsWith(Request.Form["term"])
+                            select t.TagName)
+                            .Take(10)
+                            .ToArrayAsync();
             return new JsonResult(new { suggestions = result });
         }
 
         public async Task<IActionResult> OnPost()
         {
+            using var context = AppContentDbContext.Create();
             if (ModelState.IsValid)
             {
                 var pictureLinks = await GetPictureLinks();
-
-                using (var context = new AppContentDbContext(
-                   new DbContextOptionsBuilder<AppContentDbContext>()
-                   .UseSqlServer(Startup.Connection)
-                   .Options))
+                var newReview = new Review()
                 {
-                    var a = context.Reviews.Where(r => EF.Functions.Contains(r.ReviewText, "w"));
-                    var newReview = new Review()
-                    {
-                        ReviewCreatorID = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value,
-                        ReviewCreatorName = User.Identity.Name,
-                        ReviewText = Input.ReviewText,
-                        ReviewSubjectGenre = Input.ReviewSubjectGenre,
-                        ReviewSubjectName = Input.ReviewSubjectName,
-                        CreationDate = DateTime.Now,
-                        TagRelations = new List<UserReviewAndTagRelation>(),
-                        AttachedPictureLinks = pictureLinks
-                    };
-                    context.Reviews.Add(newReview);
+                    ReviewCreatorID = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value,
+                    ReviewCreatorName = User.Identity.Name,
+                    ReviewText = Input.ReviewText,
+                    ReviewSubjectGenre = Input.ReviewSubjectGenre,
+                    ReviewSubjectName = Input.ReviewSubjectName,
+                    CreationDate = DateTime.Now,
+                    TagRelations = new List<UserReviewAndTagRelation>(),
+                    AttachedPictureLinks = pictureLinks
+                };
+                context.Reviews.Add(newReview);
 
-                    if (Input.Tags?.Length > 0)
+                if (Input.Tags?.Length > 0)
+                {
+                    foreach (var t in from t in Input.Tags.Split(',')
+                                      where t.Length > 0
+                                      select t.Trim())
                     {
-                        foreach (var t in from t in Input.Tags.Split(',')
-                                          where t.Length > 0
-                                          select t.Trim())
+                        var tag = Regex.Replace(t, @"[ ]{2,}", " ");
+
+                        Tag newTag = context.Tags
+                            .Include(t => t.ReviewRelations)
+                            .FirstOrDefault(_t => _t.TagName == tag);
+                        if (newTag == null)
                         {
-                            var tag = Regex.Replace(t, @"[ ]{2,}", " ");
-
-                            Tag newTag = context.Tags
-                                .Include(t => t.ReviewRelations)
-                                .FirstOrDefault(_t => _t.TagName == tag);
-                            if (newTag == null)
+                            newTag = new Tag()
                             {
-                                newTag = new Tag()
-                                {
-                                    TagName = tag,
-                                    ReviewRelations = new List<UserReviewAndTagRelation>()
-                                };
-                                context.Tags.Add(newTag);
-                            }
-
-                            var rel = new UserReviewAndTagRelation()
-                            {
-                                Tag = newTag,
-                                Review = newReview
+                                TagName = tag,
+                                ReviewRelations = new List<UserReviewAndTagRelation>()
                             };
-                            newTag.ReviewRelations.Add(rel);
-                            newReview.TagRelations.Add(rel);
-                            context.ReviewAndTagRelations.Add(rel);
+                            context.Tags.Add(newTag);
                         }
-                    }
 
-                    context.SaveChanges();
+                        var rel = new UserReviewAndTagRelation()
+                        {
+                            Tag = newTag,
+                            Review = newReview
+                        };
+                        newTag.ReviewRelations.Add(rel);
+                        newReview.TagRelations.Add(rel);
+                        context.ReviewAndTagRelations.Add(rel);
+                    }
                 }
+
+                context.SaveChanges();
             }
 
             return RedirectToPage("/Home", new { user = User.Identity.Name, p = 1 });
@@ -144,37 +132,35 @@ namespace RazorCoursework.Pages
             if (!Directory.Exists(tempDirectory))
                 Directory.CreateDirectory(tempDirectory);
 
+            using var dbx = new DropboxClient(
+                "sl.BEFWUM1ofDCiPcKD00AeCYMgduuzDUBlzocDjqOkOdvBH6SBg8llAfj-khPPitEwrEvj4abqZovGlaFvwg1YDNv7uqeAxpYixsBRvBOG22HUe5XAwCQeFSy0ggA1gYHqQ-hQICUfgt0E");
             string pictureLinks = string.Empty;
-            using (var dbx = new DropboxClient(
-                "sl.BEFWUM1ofDCiPcKD00AeCYMgduuzDUBlzocDjqOkOdvBH6SBg8llAfj-khPPitEwrEvj4abqZovGlaFvwg1YDNv7uqeAxpYixsBRvBOG22HUe5XAwCQeFSy0ggA1gYHqQ-hQICUfgt0E"))
+            foreach (var file in Request.Form.Files)
             {
-                foreach (var file in Request.Form.Files)
+                string filepath = string.Empty;
+                if (file.Length > 0)
                 {
-                    string filepath = string.Empty;
-                    if (file.Length > 0)
+                    if (file.Length <= 4096 * 1024)
                     {
-                        if (file.Length <= 4096 * 1024)
+                        using (var stream = new FileStream(
+                            tempDirectory + Guid.NewGuid() + "_" + file.FileName, FileMode.CreateNew))
                         {
-                            using (var stream = new FileStream(
-                                tempDirectory + Guid.NewGuid() + "_" + file.FileName, FileMode.CreateNew))
-                            {
-                                file.CopyTo(stream);
-                                filepath = stream.Name;
-                            }
-                            using (var fileStream = System.IO.File.Open(filepath, FileMode.Open))
-                            {
-                                var uploaded = await dbx.Files.UploadAsync(
-                                    "/" + Guid.NewGuid() + "_" + file.FileName,
-                                    body: fileStream);
-                                pictureLinks +=
-                                    (await dbx.Sharing.CreateSharedLinkWithSettingsAsync(uploaded.PathLower))
-                                    .Url.Replace("dl=0", "raw=1") + ";";
-                            }
-                            System.IO.File.Delete(filepath);
+                            file.CopyTo(stream);
+                            filepath = stream.Name;
                         }
-                        else
-                            ModelState.AddModelError(string.Empty, "Вес загружаемого изображения не должен превышать 4 МБ.");
+                        using (var fileStream = System.IO.File.Open(filepath, FileMode.Open))
+                        {
+                            var uploaded = await dbx.Files.UploadAsync(
+                                "/" + Guid.NewGuid() + "_" + file.FileName,
+                                body: fileStream);
+                            pictureLinks +=
+                                (await dbx.Sharing.CreateSharedLinkWithSettingsAsync(uploaded.PathLower))
+                                .Url.Replace("dl=0", "raw=1") + ";";
+                        }
+                        System.IO.File.Delete(filepath);
                     }
+                    else
+                        ModelState.AddModelError(string.Empty, "Вес загружаемого изображения не должен превышать 4 МБ.");
                 }
             }
 

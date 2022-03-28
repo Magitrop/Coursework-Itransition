@@ -12,5 +12,11 @@ namespace RazorCoursework.Data
             : base(options)
         {
         }
+
+        public static ApplicationDbContext Create() =>
+            new ApplicationDbContext(
+                new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseSqlServer(Startup.Connection)
+                .Options);
     }
 }

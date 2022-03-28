@@ -66,5 +66,11 @@ namespace RazorCoursework.Data
                 context.SaveChanges();
             }
         }
+
+        public static AppContentDbContext Create() => 
+            new AppContentDbContext(
+                new DbContextOptionsBuilder<AppContentDbContext>()
+                .UseSqlServer(Startup.Connection)
+                .Options);
     }
 }
